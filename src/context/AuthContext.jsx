@@ -1,22 +1,11 @@
-import { createContext, useContext, useEffect, useState } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../firebase';
+import { createContext, useContext, useState } from 'react';
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [currentUser, setCurrentUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // This listener automatically cleans up when unmounted
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
-      setLoading(false);
-    });
-
-    return unsubscribe;
-  }, []);
+  // Bypassing auth for now: Always provide a dummy user object
+  const [currentUser] = useState({ uid: 'bypass-admin', email: 'admin@portfolio.local' });
+  const loading = false;
 
   const value = {
     currentUser,

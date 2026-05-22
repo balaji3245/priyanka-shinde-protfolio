@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { signOut } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { useNavigate, Outlet, Link, useLocation } from 'react-router-dom';
 import { FiHome, FiBriefcase, FiAward, FiBook, FiCode, FiLogOut, FiMenu, FiX, FiInbox } from 'react-icons/fi';
@@ -16,15 +15,6 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      navigate('/login');
-    } catch (error) {
-      console.error('Failed to log out', error);
-    }
-  };
 
   const SidebarContent = () => (
     <div className="h-full flex flex-col bg-gray-900 text-white w-64 flex-shrink-0">
@@ -68,15 +58,6 @@ export default function Dashboard() {
         </nav>
       </div>
       
-      <div className="flex-shrink-0 flex border-t border-gray-800 p-4">
-        <button
-          onClick={handleLogout}
-          className="flex-shrink-0 group block w-full flex items-center text-gray-300 hover:text-white"
-        >
-          <FiLogOut className="inline-block h-5 w-5 mr-2 text-gray-400 group-hover:text-red-400" />
-          <span className="text-sm font-medium">Log out</span>
-        </button>
-      </div>
     </div>
   );
 
