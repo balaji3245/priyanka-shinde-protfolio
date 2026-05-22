@@ -8,304 +8,134 @@ export default function ExperienceAdmin() {
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [currentExp, setCurrentExp] = useState(null);
-  
-  // Form State
-  const [formData, setFormData] = useState({
-    title: '',
-    company: '',
-    period: '',
-    logo: '💼',
-    isActive: false,
-    points: '',
-    tags: ''
-  });
+  const [formData, setFormData] = useState({ title: '', company: '', period: '', logo: '💼', isActive: false, points: '', tags: '' });
 
-  const fetchExperiences = async () => {
+  const fetch_ = async () => {
     setLoading(true);
     try {
-      const querySnapshot = await getDocs(collection(db, 'experience'));
-      const exps = [];
-      querySnapshot.forEach((doc) => {
-        exps.push({ id: doc.id, ...doc.data() });
-      });
-      setExperiences(exps);
-    } catch (err) {
-      console.error("Error fetching experiences", err);
-    } finally {
-      setLoading(false);
-    }
+      const snap = await getDocs(collection(db, 'experience'));
+      const list = []; snap.forEach(d => list.push({ id: d.id, ...d.data() }));
+      setExperiences(list);
+    } catch (err) { console.error(err); } finally { setLoading(false); }
   };
+  useEffect(() => { fetch_(); }, []);
 
-  useEffect(() => {
-    fetchExperiences();
-  }, []);
-
-  const handleInputChange = (e) => {
+  const onChange = e => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
+    setFormData(p => ({ ...p, [name]: type === 'checkbox' ? checked : value }));
   };
 
-  const handleAddNew = () => {
-    setCurrentExp(null);
-    setFormData({
-      title: '',
-      company: '',
-      period: '',
-      logo: '💼',
-      isActive: false,
-      points: '',
-      tags: ''
-    });
+  const openAdd = () => { setCurrentExp(null); setFormData({ title: '', company: '', period: '', logo: '💼', isActive: false, points: '', tags: '' }); setIsEditing(true); };
+  const openEdit = e => {
+    setCurrentExp(e);
+    setFormData({ title: e.title || '', company: e.company || '', period: e.period || '', logo: e.logo || '💼', isActive: e.isActive || false, points: Array.isArray(e.points) ? e.points.join('\n') : '', tags: Array.isArray(e.tags) ? e.tags.join(', ') : '' });
     setIsEditing(true);
   };
-
-  const handleEdit = (exp) => {
-    setCurrentExp(exp);
-    // Convert array back to newline separated string for textarea
-    const pointsText = Array.isArray(exp.points) 
-      ? exp.points.join('\n') 
-      : (exp.points || '');
-      
-    const tagsText = Array.isArray(exp.tags) 
-      ? exp.tags.join(', ') 
-      : (exp.tags || '');
-
-    setFormData({
-      title: exp.title || '',
-      company: exp.company || '',
-      period: exp.period || '',
-      logo: exp.logo || '💼',
-      isActive: exp.isActive || false,
-      points: pointsText,
-      tags: tagsText
-    });
-    setIsEditing(true);
+  const handleDelete = async id => {
+    if (!window.confirm('Delete this experience?')) return;
+    await deleteDoc(doc(db, 'experience', id)); fetch_();
   };
-
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this experience?')) {
-      try {
-        await deleteDoc(doc(db, 'experience', id));
-        fetchExperiences();
-      } catch (err) {
-        console.error("Error deleting document: ", err);
-        alert("Failed to delete experience");
-      }
-    }
-  };
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    try {
-      // Split by newline and filter empty lines
-      const pointsArray = formData.points.split('\n').map(p => p.trim()).filter(Boolean);
-      const tagsArray = formData.tags.split(',').map(t => t.trim()).filter(Boolean);
-
-      const expData = {
-        title: formData.title,
-        company: formData.company,
-        period: formData.period,
-        logo: formData.logo,
-        isActive: formData.isActive,
-        points: pointsArray,
-        tags: tagsArray
-      };
-
-      if (currentExp) {
-        // Update existing
-        await updateDoc(doc(db, 'experience', currentExp.id), expData);
-      } else {
-        // Add new
-        await addDoc(collection(db, 'experience'), expData);
-      }
-      
-      setIsEditing(false);
-      fetchExperiences();
-    } catch (err) {
-      console.error("Error saving document: ", err);
-      alert("Failed to save experience");
-    }
+    const data = { ...formData, points: formData.points.split('\n').map(p => p.trim()).filter(Boolean), tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean) };
+    if (currentExp) await updateDoc(doc(db, 'experience', currentExp.id), data);
+    else await addDoc(collection(db, 'experience'), data);
+    setIsEditing(false); fetch_();
   };
-
-  if (loading && !isEditing && experiences.length === 0) {
-    return <div className="text-gray-500">Loading experiences...</div>;
-  }
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-display)' }}>Manage Experience</h1>
-        {!isEditing && (
-          <button
-            onClick={handleAddNew}
-            className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors shadow-sm text-sm font-medium"
-          >
-            <FiPlus /> Add Experience
-          </button>
-        )}
+      <div className="admin-page-header">
+        <div>
+          <h1 className="admin-page-title">Experience</h1>
+          <p className="admin-page-subtitle">Your work history and roles</p>
+        </div>
+        {!isEditing && <button className="admin-btn-primary" onClick={openAdd}><FiPlus /> Add Role</button>}
       </div>
 
+      {!isEditing && (
+        <div className="admin-stats-row">
+          <div className="admin-stat-card"><div className="admin-stat-card__icon">💼</div><div className="admin-stat-card__num">{experiences.length}</div><div className="admin-stat-card__label">Total Roles</div></div>
+          <div className="admin-stat-card"><div className="admin-stat-card__icon">🟢</div><div className="admin-stat-card__num">{experiences.filter(e => e.isActive).length}</div><div className="admin-stat-card__label">Currently Active</div></div>
+        </div>
+      )}
+
       {isEditing ? (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-100">
-            <h2 className="text-lg font-semibold text-gray-900">{currentExp ? 'Edit Experience' : 'New Experience'}</h2>
-            <button onClick={() => setIsEditing(false)} className="text-gray-400 hover:text-gray-600">
-              <FiX size={24} />
-            </button>
+        <div className="admin-form-card">
+          <div className="admin-form-card__header">
+            <h2 className="admin-form-card__title">{currentExp ? '✏️ Edit Role' : '➕ New Role'}</h2>
+            <button onClick={() => setIsEditing(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', fontSize: 20 }}><FiX /></button>
           </div>
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="col-span-2 md:col-span-1">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Job Title *</label>
-                <input
-                  type="text"
-                  name="title"
-                  required
-                  value={formData.title}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-
-              <div className="col-span-2 md:col-span-1">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Company / Institution *</label>
-                <input
-                  type="text"
-                  name="company"
-                  required
-                  value={formData.company}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-
-              <div className="col-span-2 md:col-span-1">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Period (e.g., June 2023 - Present) *</label>
-                <input
-                  type="text"
-                  name="period"
-                  required
-                  value={formData.period}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-              
-              <div className="col-span-2 md:col-span-1">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Logo / Emoji</label>
-                <input
-                  type="text"
-                  name="logo"
-                  value={formData.logo}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-
-              <div className="col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Bullet Points (Enter one point per line)
-                </label>
-                <textarea
-                  name="points"
-                  rows="4"
-                  value={formData.points}
-                  onChange={handleInputChange}
-                  placeholder="Mentored 100+ students...&#10;Organized hackathons..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                ></textarea>
-              </div>
-
-              <div className="col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Skills / Tags (comma separated)
-                </label>
-                <input
-                  type="text"
-                  name="tags"
-                  value={formData.tags}
-                  onChange={handleInputChange}
-                  placeholder="Java, C++, Curriculum Design"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
+          <form onSubmit={handleSubmit}>
+            <div className="admin-form-card__body">
+              <div className="admin-form-grid">
+                <div className="admin-form-field">
+                  <label className="admin-form-label">Job Title *</label>
+                  <input name="title" required value={formData.title} onChange={onChange} className="admin-form-input" placeholder="Assistant Professor" />
+                </div>
+                <div className="admin-form-field">
+                  <label className="admin-form-label">Company / Institution *</label>
+                  <input name="company" required value={formData.company} onChange={onChange} className="admin-form-input" placeholder="SVM Polytechnic College" />
+                </div>
+                <div className="admin-form-field">
+                  <label className="admin-form-label">Period *</label>
+                  <input name="period" required value={formData.period} onChange={onChange} className="admin-form-input" placeholder="June 2023 – Present" />
+                </div>
+                <div className="admin-form-field">
+                  <label className="admin-form-label">Emoji / Logo</label>
+                  <input name="logo" value={formData.logo} onChange={onChange} className="admin-form-input" />
+                </div>
+                <div className="admin-form-field span-2">
+                  <label className="admin-form-label">Bullet Points (one per line)</label>
+                  <textarea name="points" rows="5" value={formData.points} onChange={onChange} className="admin-form-textarea" placeholder="Mentored 100+ students...&#10;Organized hackathons..." />
+                </div>
+                <div className="admin-form-field span-2">
+                  <label className="admin-form-label">Skills / Tags (comma separated)</label>
+                  <input name="tags" value={formData.tags} onChange={onChange} className="admin-form-input" placeholder="Java, C++, Curriculum Design" />
+                </div>
+                <div className="admin-form-field span-2">
+                  <div className="admin-toggle-row">
+                    <input type="checkbox" id="isActive" name="isActive" checked={formData.isActive} onChange={onChange} style={{ width: 16, height: 16, accentColor: '#6366f1' }} />
+                    <label htmlFor="isActive" className="admin-toggle-label">🟢 Currently Active Role (shows pulsing green dot)</label>
+                  </div>
+                </div>
               </div>
             </div>
-
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                id="isActive"
-                name="isActive"
-                checked={formData.isActive}
-                onChange={handleInputChange}
-                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-              />
-              <label htmlFor="isActive" className="ml-2 block text-sm font-medium text-gray-900">
-                Currently Active Role (Shows the green pulsing dot)
-              </label>
-            </div>
-
-            <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
-              <button
-                type="button"
-                onClick={() => setIsEditing(false)}
-                className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="flex items-center gap-2 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700"
-              >
-                <FiSave /> Save Experience
-              </button>
+            <div className="admin-form-footer">
+              <button type="button" className="admin-btn-cancel" onClick={() => setIsEditing(false)}>Cancel</button>
+              <button type="submit" className="admin-btn-primary"><FiSave /> Save Role</button>
             </div>
           </form>
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-          {experiences.length === 0 ? (
-            <div className="p-8 text-center text-gray-500">
-              No experiences found. Create your first role to get started.
-            </div>
+        <div className="admin-table-card">
+          <div className="admin-table-card__header">
+            <div><span className="admin-table-card__title">All Roles</span><span className="admin-table-card__count">({experiences.length})</span></div>
+          </div>
+          {loading ? (
+            <div className="admin-loading"><div className="admin-spinner" /><span>Loading...</span></div>
+          ) : experiences.length === 0 ? (
+            <div className="admin-empty"><div className="admin-empty__icon">💼</div><div className="admin-empty__title">No roles added</div><div className="admin-empty__desc">Add your work history to get started.</div></div>
           ) : (
-            <ul className="divide-y divide-gray-200">
-              {experiences.map((exp) => (
-                <li key={exp.id} className="p-6 hover:bg-gray-50 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xl mr-2">{exp.logo}</span>
-                      <h3 className="text-lg font-semibold text-gray-900">{exp.title}</h3>
-                      {exp.isActive && (
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                          Active
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-sm text-gray-600 font-medium">{exp.company} <span className="text-gray-400 font-normal ml-2">| {exp.period}</span></p>
+            experiences.map(exp => (
+              <div key={exp.id} className="admin-row">
+                <div style={{ fontSize: 28, flexShrink: 0 }}>{exp.logo || '💼'}</div>
+                <div className="admin-row__info">
+                  <div className="admin-row__title" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    {exp.title}
+                    {exp.isActive && <span className="admin-badge active">🟢 Active</span>}
                   </div>
-                  
-                  <div className="flex items-center gap-2 sm:ml-4 sm:flex-shrink-0">
-                    <button
-                      onClick={() => handleEdit(exp)}
-                      className="p-2 text-gray-400 hover:text-indigo-600 transition-colors border border-transparent hover:border-indigo-100 hover:bg-indigo-50 rounded"
-                    >
-                      <FiEdit2 />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(exp.id)}
-                      className="p-2 text-gray-400 hover:text-red-600 transition-colors border border-transparent hover:border-red-100 hover:bg-red-50 rounded"
-                    >
-                      <FiTrash2 />
-                    </button>
+                  <div className="admin-row__meta">{exp.company} &nbsp;·&nbsp; {exp.period}</div>
+                  <div className="admin-pill-list" style={{ marginTop: 6 }}>
+                    {Array.isArray(exp.tags) && exp.tags.slice(0, 4).map(t => <span key={t} className="admin-pill">{t}</span>)}
                   </div>
-                </li>
-              ))}
-            </ul>
+                </div>
+                <div className="admin-row__actions">
+                  <button className="admin-action-btn edit" onClick={() => openEdit(exp)}><FiEdit2 /></button>
+                  <button className="admin-action-btn delete" onClick={() => handleDelete(exp.id)}><FiTrash2 /></button>
+                </div>
+              </div>
+            ))
           )}
         </div>
       )}

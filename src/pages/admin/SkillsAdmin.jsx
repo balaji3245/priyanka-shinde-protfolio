@@ -7,242 +7,114 @@ export default function SkillsAdmin() {
   const [skills, setSkills] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
-  const [currentSkillCat, setCurrentSkillCat] = useState(null);
-  
-  const [formData, setFormData] = useState({
-    icon: '☕',
-    title: '',
-    skillsList: '',
-    order: 0
-  });
+  const [currentCat, setCurrentCat] = useState(null);
+  const [formData, setFormData] = useState({ icon: '☕', title: '', skillsList: '', order: 0 });
 
-  const fetchSkills = async () => {
+  const fetch_ = async () => {
     setLoading(true);
     try {
-      const querySnapshot = await getDocs(collection(db, 'skills'));
-      const skillsList = [];
-      querySnapshot.forEach((doc) => {
-        skillsList.push({ id: doc.id, ...doc.data() });
-      });
-      // Sort by order
-      skillsList.sort((a, b) => (a.order || 0) - (b.order || 0));
-      setSkills(skillsList);
-    } catch (err) {
-      console.error("Error fetching skills", err);
-    } finally {
-      setLoading(false);
-    }
+      const snap = await getDocs(collection(db, 'skills'));
+      const list = []; snap.forEach(d => list.push({ id: d.id, ...d.data() }));
+      list.sort((a, b) => (a.order || 0) - (b.order || 0));
+      setSkills(list);
+    } catch (err) { console.error(err); } finally { setLoading(false); }
   };
+  useEffect(() => { fetch_(); }, []);
 
-  useEffect(() => {
-    fetchSkills();
-  }, []);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+  const onChange = e => setFormData(p => ({ ...p, [e.target.name]: e.target.value }));
+  const openAdd = () => { setCurrentCat(null); setFormData({ icon: '☕', title: '', skillsList: '', order: skills.length }); setIsEditing(true); };
+  const openEdit = cat => { setCurrentCat(cat); setFormData({ icon: cat.icon || '☕', title: cat.title || '', skillsList: Array.isArray(cat.skills) ? cat.skills.join(', ') : '', order: cat.order || 0 }); setIsEditing(true); };
+  const handleDelete = async id => {
+    if (!window.confirm('Delete this skill category?')) return;
+    await deleteDoc(doc(db, 'skills', id)); fetch_();
   };
-
-  const handleAddNew = () => {
-    setCurrentSkillCat(null);
-    setFormData({
-      icon: '☕',
-      title: '',
-      skillsList: '',
-      order: skills.length
-    });
-    setIsEditing(true);
-  };
-
-  const handleEdit = (cat) => {
-    setCurrentSkillCat(cat);
-    
-    const skillsText = Array.isArray(cat.skills) 
-      ? cat.skills.join(', ') 
-      : (cat.skills || '');
-
-    setFormData({
-      icon: cat.icon || '☕',
-      title: cat.title || '',
-      skillsList: skillsText,
-      order: cat.order || 0
-    });
-    setIsEditing(true);
-  };
-
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this skill category?')) {
-      try {
-        await deleteDoc(doc(db, 'skills', id));
-        fetchSkills();
-      } catch (err) {
-        console.error("Error deleting document: ", err);
-      }
-    }
-  };
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    try {
-      const skillsArray = formData.skillsList.split(',').map(s => s.trim()).filter(Boolean);
-
-      const catData = {
-        icon: formData.icon,
-        title: formData.title,
-        skills: skillsArray,
-        order: Number(formData.order)
-      };
-
-      if (currentSkillCat) {
-        await updateDoc(doc(db, 'skills', currentSkillCat.id), catData);
-      } else {
-        await addDoc(collection(db, 'skills'), catData);
-      }
-      
-      setIsEditing(false);
-      fetchSkills();
-    } catch (err) {
-      console.error("Error saving document: ", err);
-    }
+    const data = { icon: formData.icon, title: formData.title, skills: formData.skillsList.split(',').map(s => s.trim()).filter(Boolean), order: Number(formData.order) };
+    if (currentCat) await updateDoc(doc(db, 'skills', currentCat.id), data);
+    else await addDoc(collection(db, 'skills'), data);
+    setIsEditing(false); fetch_();
   };
 
-  if (loading && !isEditing && skills.length === 0) {
-    return <div className="text-gray-500">Loading skills...</div>;
-  }
+  const totalSkills = skills.reduce((acc, cat) => acc + (Array.isArray(cat.skills) ? cat.skills.length : 0), 0);
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-display)' }}>Manage Skills</h1>
-        {!isEditing && (
-          <button
-            onClick={handleAddNew}
-            className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors shadow-sm text-sm font-medium"
-          >
-            <FiPlus /> Add Skill Category
-          </button>
-        )}
+      <div className="admin-page-header">
+        <div>
+          <h1 className="admin-page-title">Skills</h1>
+          <p className="admin-page-subtitle">Your tech stack and competencies</p>
+        </div>
+        {!isEditing && <button className="admin-btn-primary" onClick={openAdd}><FiPlus /> Add Category</button>}
       </div>
 
+      {!isEditing && (
+        <div className="admin-stats-row">
+          <div className="admin-stat-card"><div className="admin-stat-card__icon">🗂️</div><div className="admin-stat-card__num">{skills.length}</div><div className="admin-stat-card__label">Categories</div></div>
+          <div className="admin-stat-card"><div className="admin-stat-card__icon">⚡</div><div className="admin-stat-card__num">{totalSkills}</div><div className="admin-stat-card__label">Total Skills</div></div>
+        </div>
+      )}
+
       {isEditing ? (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-100">
-            <h2 className="text-lg font-semibold text-gray-900">{currentSkillCat ? 'Edit Category' : 'New Category'}</h2>
-            <button onClick={() => setIsEditing(false)} className="text-gray-400 hover:text-gray-600">
-              <FiX size={24} />
-            </button>
+        <div className="admin-form-card">
+          <div className="admin-form-card__header">
+            <h2 className="admin-form-card__title">{currentCat ? '✏️ Edit Category' : '➕ New Category'}</h2>
+            <button onClick={() => setIsEditing(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', fontSize: 20 }}><FiX /></button>
           </div>
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="col-span-2 md:col-span-1">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Category Title *</label>
-                <input
-                  type="text"
-                  name="title"
-                  required
-                  placeholder="e.g. Programming Languages"
-                  value={formData.title}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-
-              <div className="col-span-1">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Icon (Emoji) *</label>
-                <input
-                  type="text"
-                  name="icon"
-                  required
-                  value={formData.icon}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-
-              <div className="col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Skills (comma separated) *</label>
-                <input
-                  type="text"
-                  name="skillsList"
-                  required
-                  placeholder="Java, Python, JavaScript, C++"
-                  value={formData.skillsList}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-              
-              <div className="col-span-1">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Sort Order (0 is first)</label>
-                <input
-                  type="number"
-                  name="order"
-                  value={formData.order}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
+          <form onSubmit={handleSubmit}>
+            <div className="admin-form-card__body">
+              <div className="admin-form-grid">
+                <div className="admin-form-field">
+                  <label className="admin-form-label">Category Title *</label>
+                  <input name="title" required value={formData.title} onChange={onChange} className="admin-form-input" placeholder="Programming Languages" />
+                </div>
+                <div className="admin-form-field">
+                  <label className="admin-form-label">Emoji Icon</label>
+                  <input name="icon" value={formData.icon} onChange={onChange} className="admin-form-input" />
+                </div>
+                <div className="admin-form-field span-2">
+                  <label className="admin-form-label">Skills (comma separated) *</label>
+                  <input name="skillsList" required value={formData.skillsList} onChange={onChange} className="admin-form-input" placeholder="Java, Python, JavaScript, C++" />
+                </div>
+                <div className="admin-form-field">
+                  <label className="admin-form-label">Sort Order (0 = first)</label>
+                  <input name="order" type="number" value={formData.order} onChange={onChange} className="admin-form-input" />
+                </div>
               </div>
             </div>
-
-            <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
-              <button
-                type="button"
-                onClick={() => setIsEditing(false)}
-                className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="flex items-center gap-2 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700"
-              >
-                <FiSave /> Save Category
-              </button>
+            <div className="admin-form-footer">
+              <button type="button" className="admin-btn-cancel" onClick={() => setIsEditing(false)}>Cancel</button>
+              <button type="submit" className="admin-btn-primary"><FiSave /> Save Category</button>
             </div>
           </form>
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-          {skills.length === 0 ? (
-            <div className="p-8 text-center text-gray-500">
-              No skills found. Add your tech stack to get started.
-            </div>
+        <div className="admin-table-card">
+          <div className="admin-table-card__header">
+            <div><span className="admin-table-card__title">All Categories</span><span className="admin-table-card__count">({skills.length})</span></div>
+          </div>
+          {loading ? (
+            <div className="admin-loading"><div className="admin-spinner" /><span>Loading...</span></div>
+          ) : skills.length === 0 ? (
+            <div className="admin-empty"><div className="admin-empty__icon">⚡</div><div className="admin-empty__title">No skills added</div><div className="admin-empty__desc">Add your tech stack categories.</div></div>
           ) : (
-            <ul className="divide-y divide-gray-200">
-              {skills.map((cat) => (
-                <li key={cat.id} className="p-6 hover:bg-gray-50 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                      <span className="mr-2">{cat.icon}</span>
-                      {cat.title}
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {Array.isArray(cat.skills) && cat.skills.map(skill => (
-                        <span key={skill} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
+            skills.map(cat => (
+              <div key={cat.id} className="admin-row">
+                <div style={{ width: 44, height: 44, background: 'rgba(99,102,241,0.08)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0 }}>
+                  {cat.icon}
+                </div>
+                <div className="admin-row__info">
+                  <div className="admin-row__title">{cat.title}</div>
+                  <div className="admin-pill-list" style={{ marginTop: 6 }}>
+                    {Array.isArray(cat.skills) && cat.skills.map(s => <span key={s} className="admin-pill">{s}</span>)}
                   </div>
-                  
-                  <div className="flex items-center gap-2 shrink-0">
-                    <button
-                      onClick={() => handleEdit(cat)}
-                      className="p-2 text-gray-400 hover:text-indigo-600 transition-colors border border-transparent hover:border-indigo-100 hover:bg-indigo-50 rounded"
-                    >
-                      <FiEdit2 />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(cat.id)}
-                      className="p-2 text-gray-400 hover:text-red-600 transition-colors border border-transparent hover:border-red-100 hover:bg-red-50 rounded"
-                    >
-                      <FiTrash2 />
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
+                </div>
+                <div className="admin-row__actions">
+                  <button className="admin-action-btn edit" onClick={() => openEdit(cat)}><FiEdit2 /></button>
+                  <button className="admin-action-btn delete" onClick={() => handleDelete(cat.id)}><FiTrash2 /></button>
+                </div>
+              </div>
+            ))
           )}
         </div>
       )}

@@ -8,260 +8,119 @@ export default function EducationAdmin() {
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [currentEdu, setCurrentEdu] = useState(null);
-  
-  const [formData, setFormData] = useState({
-    icon: '🎓',
-    score: '',
-    degree: '',
-    school: '',
-    year: '',
-    order: 0 // to control sorting
-  });
+  const [formData, setFormData] = useState({ icon: '🎓', score: '', degree: '', school: '', year: '', order: 0 });
 
-  const fetchEducation = async () => {
+  const fetch_ = async () => {
     setLoading(true);
     try {
-      const querySnapshot = await getDocs(collection(db, 'education'));
-      const eduList = [];
-      querySnapshot.forEach((doc) => {
-        eduList.push({ id: doc.id, ...doc.data() });
-      });
-      // Sort by order
-      eduList.sort((a, b) => (a.order || 0) - (b.order || 0));
-      setEducation(eduList);
-    } catch (err) {
-      console.error("Error fetching education", err);
-    } finally {
-      setLoading(false);
-    }
+      const snap = await getDocs(collection(db, 'education'));
+      const list = []; snap.forEach(d => list.push({ id: d.id, ...d.data() }));
+      list.sort((a, b) => (a.order || 0) - (b.order || 0));
+      setEducation(list);
+    } catch (err) { console.error(err); } finally { setLoading(false); }
   };
+  useEffect(() => { fetch_(); }, []);
 
-  useEffect(() => {
-    fetchEducation();
-  }, []);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+  const onChange = e => setFormData(p => ({ ...p, [e.target.name]: e.target.value }));
+  const openAdd = () => { setCurrentEdu(null); setFormData({ icon: '🎓', score: '', degree: '', school: '', year: '', order: education.length }); setIsEditing(true); };
+  const openEdit = e => { setCurrentEdu(e); setFormData({ icon: e.icon || '🎓', score: e.score || '', degree: e.degree || '', school: e.school || '', year: e.year || '', order: e.order || 0 }); setIsEditing(true); };
+  const handleDelete = async id => {
+    if (!window.confirm('Delete this education entry?')) return;
+    await deleteDoc(doc(db, 'education', id)); fetch_();
   };
-
-  const handleAddNew = () => {
-    setCurrentEdu(null);
-    setFormData({
-      icon: '🎓',
-      score: '',
-      degree: '',
-      school: '',
-      year: '',
-      order: education.length
-    });
-    setIsEditing(true);
-  };
-
-  const handleEdit = (edu) => {
-    setCurrentEdu(edu);
-    setFormData({
-      icon: edu.icon || '🎓',
-      score: edu.score || '',
-      degree: edu.degree || '',
-      school: edu.school || '',
-      year: edu.year || '',
-      order: edu.order || 0
-    });
-    setIsEditing(true);
-  };
-
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this education entry?')) {
-      try {
-        await deleteDoc(doc(db, 'education', id));
-        fetchEducation();
-      } catch (err) {
-        console.error("Error deleting document: ", err);
-      }
-    }
-  };
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    try {
-      const eduData = {
-        ...formData,
-        order: Number(formData.order)
-      };
-
-      if (currentEdu) {
-        await updateDoc(doc(db, 'education', currentEdu.id), eduData);
-      } else {
-        await addDoc(collection(db, 'education'), eduData);
-      }
-      
-      setIsEditing(false);
-      fetchEducation();
-    } catch (err) {
-      console.error("Error saving document: ", err);
-    }
+    const data = { ...formData, order: Number(formData.order) };
+    if (currentEdu) await updateDoc(doc(db, 'education', currentEdu.id), data);
+    else await addDoc(collection(db, 'education'), data);
+    setIsEditing(false); fetch_();
   };
-
-  if (loading && !isEditing && education.length === 0) {
-    return <div className="text-gray-500">Loading education...</div>;
-  }
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-display)' }}>Manage Education</h1>
-        {!isEditing && (
-          <button
-            onClick={handleAddNew}
-            className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors shadow-sm text-sm font-medium"
-          >
-            <FiPlus /> Add Education
-          </button>
-        )}
+      <div className="admin-page-header">
+        <div>
+          <h1 className="admin-page-title">Education</h1>
+          <p className="admin-page-subtitle">Your academic background and degrees</p>
+        </div>
+        {!isEditing && <button className="admin-btn-primary" onClick={openAdd}><FiPlus /> Add Degree</button>}
       </div>
 
+      {!isEditing && (
+        <div className="admin-stats-row">
+          <div className="admin-stat-card"><div className="admin-stat-card__icon">🎓</div><div className="admin-stat-card__num">{education.length}</div><div className="admin-stat-card__label">Qualifications</div></div>
+        </div>
+      )}
+
       {isEditing ? (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-100">
-            <h2 className="text-lg font-semibold text-gray-900">{currentEdu ? 'Edit Education' : 'New Education'}</h2>
-            <button onClick={() => setIsEditing(false)} className="text-gray-400 hover:text-gray-600">
-              <FiX size={24} />
-            </button>
+        <div className="admin-form-card">
+          <div className="admin-form-card__header">
+            <h2 className="admin-form-card__title">{currentEdu ? '✏️ Edit Degree' : '➕ New Degree'}</h2>
+            <button onClick={() => setIsEditing(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', fontSize: 20 }}><FiX /></button>
           </div>
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Degree / Certificate *</label>
-                <input
-                  type="text"
-                  name="degree"
-                  required
-                  value={formData.degree}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-
-              <div className="col-span-2 md:col-span-1">
-                <label className="block text-sm font-medium text-gray-700 mb-1">School / Institution *</label>
-                <input
-                  type="text"
-                  name="school"
-                  required
-                  value={formData.school}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-
-              <div className="col-span-2 md:col-span-1">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Score / CGPA *</label>
-                <input
-                  type="text"
-                  name="score"
-                  required
-                  placeholder="e.g. CGPA 7.75"
-                  value={formData.score}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-
-              <div className="col-span-2 md:col-span-1">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Year / Period *</label>
-                <input
-                  type="text"
-                  name="year"
-                  required
-                  placeholder="2019 - 2023"
-                  value={formData.year}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-
-              <div className="col-span-1">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Icon (Emoji)</label>
-                <input
-                  type="text"
-                  name="icon"
-                  value={formData.icon}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-              
-              <div className="col-span-1">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Sort Order (0 is first)</label>
-                <input
-                  type="number"
-                  name="order"
-                  value={formData.order}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
+          <form onSubmit={handleSubmit}>
+            <div className="admin-form-card__body">
+              <div className="admin-form-grid">
+                <div className="admin-form-field span-2">
+                  <label className="admin-form-label">Degree / Certificate *</label>
+                  <input name="degree" required value={formData.degree} onChange={onChange} className="admin-form-input" placeholder="B.Tech in Computer Engineering" />
+                </div>
+                <div className="admin-form-field">
+                  <label className="admin-form-label">School / Institution *</label>
+                  <input name="school" required value={formData.school} onChange={onChange} className="admin-form-input" placeholder="DBATU Lonere" />
+                </div>
+                <div className="admin-form-field">
+                  <label className="admin-form-label">Score / CGPA *</label>
+                  <input name="score" required value={formData.score} onChange={onChange} className="admin-form-input" placeholder="CGPA 7.75" />
+                </div>
+                <div className="admin-form-field">
+                  <label className="admin-form-label">Year / Period *</label>
+                  <input name="year" required value={formData.year} onChange={onChange} className="admin-form-input" placeholder="2019 – 2023" />
+                </div>
+                <div className="admin-form-field">
+                  <label className="admin-form-label">Emoji Icon</label>
+                  <input name="icon" value={formData.icon} onChange={onChange} className="admin-form-input" />
+                </div>
+                <div className="admin-form-field">
+                  <label className="admin-form-label">Sort Order (0 = first)</label>
+                  <input name="order" type="number" value={formData.order} onChange={onChange} className="admin-form-input" />
+                </div>
               </div>
             </div>
-
-            <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
-              <button
-                type="button"
-                onClick={() => setIsEditing(false)}
-                className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="flex items-center gap-2 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700"
-              >
-                <FiSave /> Save Education
-              </button>
+            <div className="admin-form-footer">
+              <button type="button" className="admin-btn-cancel" onClick={() => setIsEditing(false)}>Cancel</button>
+              <button type="submit" className="admin-btn-primary"><FiSave /> Save Degree</button>
             </div>
           </form>
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-          {education.length === 0 ? (
-            <div className="p-8 text-center text-gray-500">
-              No education entries found. Add your background to get started.
-            </div>
+        <div className="admin-table-card">
+          <div className="admin-table-card__header">
+            <div><span className="admin-table-card__title">All Qualifications</span><span className="admin-table-card__count">({education.length})</span></div>
+          </div>
+          {loading ? (
+            <div className="admin-loading"><div className="admin-spinner" /><span>Loading...</span></div>
+          ) : education.length === 0 ? (
+            <div className="admin-empty"><div className="admin-empty__icon">🎓</div><div className="admin-empty__title">No education added</div><div className="admin-empty__desc">Add your academic background.</div></div>
           ) : (
-            <ul className="divide-y divide-gray-200">
-              {education.map((edu) => (
-                <li key={edu.id} className="p-6 hover:bg-gray-50 transition-colors flex items-center justify-between gap-4">
-                  <div className="flex-1 flex gap-4 items-start">
-                    <div className="text-3xl bg-gray-100 h-12 w-12 flex items-center justify-center rounded-full shrink-0">
-                      {edu.icon}
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900">{edu.degree}</h3>
-                      <p className="text-sm text-gray-600">{edu.school} • {edu.year}</p>
-                      <span className="inline-block mt-1 text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded">
-                        {edu.score}
-                      </span>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-2 shrink-0">
-                    <button
-                      onClick={() => handleEdit(edu)}
-                      className="p-2 text-gray-400 hover:text-indigo-600 transition-colors border border-transparent hover:border-indigo-100 hover:bg-indigo-50 rounded"
-                    >
-                      <FiEdit2 />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(edu.id)}
-                      className="p-2 text-gray-400 hover:text-red-600 transition-colors border border-transparent hover:border-red-100 hover:bg-red-50 rounded"
-                    >
-                      <FiTrash2 />
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
+            education.map(edu => (
+              <div key={edu.id} className="admin-row">
+                <div style={{ width: 44, height: 44, background: 'linear-gradient(135deg, #ede9fe, #dbeafe)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0 }}>
+                  {edu.icon}
+                </div>
+                <div className="admin-row__info">
+                  <div className="admin-row__title">{edu.degree}</div>
+                  <div className="admin-row__meta">{edu.school} &nbsp;·&nbsp; {edu.year}</div>
+                  <span style={{ display: 'inline-block', marginTop: 4, fontSize: 11, fontWeight: 700, color: '#4f46e5', background: 'rgba(99,102,241,0.08)', padding: '2px 8px', borderRadius: 20 }}>
+                    {edu.score}
+                  </span>
+                </div>
+                <div className="admin-row__actions">
+                  <button className="admin-action-btn edit" onClick={() => openEdit(edu)}><FiEdit2 /></button>
+                  <button className="admin-action-btn delete" onClick={() => handleDelete(edu.id)}><FiTrash2 /></button>
+                </div>
+              </div>
+            ))
           )}
         </div>
       )}

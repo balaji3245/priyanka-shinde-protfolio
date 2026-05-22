@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { collection, getDocs, deleteDoc, doc, updateDoc, orderBy, query } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, doc, updateDoc, query, orderBy } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { FiTrash2, FiMail, FiCheck, FiInbox } from 'react-icons/fi';
 
@@ -10,140 +10,115 @@ export default function MessagesAdmin() {
   const fetchMessages = async () => {
     setLoading(true);
     try {
-      // Sort by latest first
       const q = query(collection(db, 'messages'), orderBy('createdAt', 'desc'));
-      const querySnapshot = await getDocs(q);
-      
-      const msgList = [];
-      querySnapshot.forEach((doc) => {
-        msgList.push({ id: doc.id, ...doc.data() });
-      });
-      setMessages(msgList);
-    } catch (err) {
-      console.error("Error fetching messages", err);
-    } finally {
-      setLoading(false);
-    }
+      const snap = await getDocs(q);
+      const list = [];
+      snap.forEach(d => list.push({ id: d.id, ...d.data() }));
+      setMessages(list);
+    } catch (err) { console.error(err); }
+    finally { setLoading(false); }
   };
 
-  useEffect(() => {
-    fetchMessages();
-  }, []);
+  useEffect(() => { fetchMessages(); }, []);
 
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this message?')) {
-      try {
-        await deleteDoc(doc(db, 'messages', id));
-        setMessages(prev => prev.filter(m => m.id !== id));
-      } catch (err) {
-        console.error("Error deleting document: ", err);
-      }
-    }
+  const handleDelete = async id => {
+    if (!window.confirm('Delete this message?')) return;
+    await deleteDoc(doc(db, 'messages', id));
+    setMessages(prev => prev.filter(m => m.id !== id));
   };
 
-  const markAsRead = async (id) => {
-    try {
-      await updateDoc(doc(db, 'messages', id), { read: true });
-      setMessages(prev => prev.map(m => m.id === id ? { ...m, read: true } : m));
-    } catch (err) {
-      console.error("Error updating document: ", err);
-    }
+  const markAsRead = async id => {
+    await updateDoc(doc(db, 'messages', id), { read: true });
+    setMessages(prev => prev.map(m => m.id === id ? { ...m, read: true } : m));
   };
 
-  const formatDate = (timestamp) => {
-    if (!timestamp) return 'Just now';
-    // Firestore timestamp to JS Date
-    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-    return new Intl.DateTimeFormat('en-US', {
-      month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
-    }).format(date);
+  const formatDate = ts => {
+    if (!ts) return 'Just now';
+    const date = ts.toDate ? ts.toDate() : new Date(ts);
+    return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }).format(date);
   };
 
-  if (loading && messages.length === 0) {
-    return <div className="text-gray-500">Loading messages...</div>;
-  }
+  const getInitials = name => name ? name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2) : '?';
+
+  const unread = messages.filter(m => !m.read).length;
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-display)' }}>Inbox Messages</h1>
-        <div className="bg-white px-4 py-2 rounded-md shadow-sm text-sm font-medium text-gray-700 border border-gray-200 flex items-center gap-2">
-          <FiInbox className="text-indigo-500" />
-          {messages.length} Total
+      <div className="admin-page-header">
+        <div>
+          <h1 className="admin-page-title">Messages</h1>
+          <p className="admin-page-subtitle">Contact form submissions from your portfolio</p>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        {messages.length === 0 ? (
-          <div className="p-12 text-center text-gray-500 flex flex-col items-center">
-            <FiMail className="w-12 h-12 text-gray-300 mb-4" />
-            <p className="text-lg font-medium text-gray-900">Your inbox is empty</p>
-            <p className="text-sm mt-1">When someone fills out your contact form, it will appear here.</p>
-          </div>
-        ) : (
-          <ul className="divide-y divide-gray-200">
-            {messages.map((msg) => (
-              <li key={msg.id} className={`p-6 transition-colors ${msg.read ? 'bg-white' : 'bg-indigo-50/30'}`}>
-                <div className="flex flex-col sm:flex-row gap-4 justify-between">
-                  
-                  {/* Message Content */}
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h3 className={`text-base font-semibold ${msg.read ? 'text-gray-900' : 'text-indigo-900'}`}>
-                        {msg.name}
-                      </h3>
-                      <span className="text-sm text-gray-500">&lt;{msg.email}&gt;</span>
-                      {!msg.read && (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-100 text-indigo-800">
-                          New
-                        </span>
-                      )}
-                    </div>
-                    
-                    <div className="text-sm font-medium text-gray-900 mb-2">Subject: {msg.subject}</div>
-                    
-                    <div className="bg-gray-50 rounded-md p-4 text-sm text-gray-700 whitespace-pre-wrap border border-gray-100">
-                      {msg.message}
-                    </div>
-                    
-                    <div className="mt-3 text-xs text-gray-400 font-medium">
-                      Received: {formatDate(msg.createdAt)}
-                    </div>
-                  </div>
-                  
-                  {/* Actions */}
-                  <div className="flex items-start gap-2 shrink-0">
-                    {!msg.read && (
-                      <button
-                        onClick={() => markAsRead(msg.id)}
-                        className="p-2 text-gray-400 hover:text-green-600 transition-colors border border-transparent hover:border-green-100 hover:bg-green-50 rounded"
-                        title="Mark as Read"
-                      >
-                        <FiCheck />
-                      </button>
-                    )}
-                    <a
-                      href={`mailto:${msg.email}?subject=Re: ${msg.subject}`}
-                      className="p-2 text-gray-400 hover:text-indigo-600 transition-colors border border-transparent hover:border-indigo-100 hover:bg-indigo-50 rounded"
-                      title="Reply via Email"
-                    >
-                      <FiMail />
-                    </a>
-                    <button
-                      onClick={() => handleDelete(msg.id)}
-                      className="p-2 text-gray-400 hover:text-red-600 transition-colors border border-transparent hover:border-red-100 hover:bg-red-50 rounded"
-                      title="Delete Message"
-                    >
-                      <FiTrash2 />
-                    </button>
-                  </div>
-
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
+      <div className="admin-stats-row">
+        <div className="admin-stat-card">
+          <div className="admin-stat-card__icon">📬</div>
+          <div className="admin-stat-card__num">{messages.length}</div>
+          <div className="admin-stat-card__label">Total Messages</div>
+        </div>
+        <div className="admin-stat-card">
+          <div className="admin-stat-card__icon">🔔</div>
+          <div className="admin-stat-card__num">{unread}</div>
+          <div className="admin-stat-card__label">Unread</div>
+        </div>
+        <div className="admin-stat-card">
+          <div className="admin-stat-card__icon">✅</div>
+          <div className="admin-stat-card__num">{messages.length - unread}</div>
+          <div className="admin-stat-card__label">Read</div>
+        </div>
       </div>
+
+      {loading ? (
+        <div className="admin-loading"><div className="admin-spinner" /><span>Loading messages...</span></div>
+      ) : messages.length === 0 ? (
+        <div className="admin-table-card">
+          <div className="admin-empty">
+            <div className="admin-empty__icon">📭</div>
+            <div className="admin-empty__title">Inbox is empty</div>
+            <div className="admin-empty__desc">When someone fills out your contact form, it will appear here.</div>
+          </div>
+        </div>
+      ) : (
+        <div>
+          {messages.map(msg => (
+            <div key={msg.id} className={`admin-msg-card ${!msg.read ? 'unread' : ''}`}>
+              <div className="admin-msg-card__header">
+                <div className="admin-msg-card__sender">
+                  <div className="admin-msg-card__avatar">{getInitials(msg.name)}</div>
+                  <div>
+                    <div className="admin-msg-card__name">
+                      {msg.name}
+                      {!msg.read && <span className="admin-badge new" style={{ marginLeft: 8 }}>New</span>}
+                    </div>
+                    <div className="admin-msg-card__email">{msg.email}</div>
+                  </div>
+                </div>
+                <div className="admin-msg-card__actions">
+                  {!msg.read && (
+                    <button className="admin-action-btn read" title="Mark as Read" onClick={() => markAsRead(msg.id)}><FiCheck /></button>
+                  )}
+                  <a href={`mailto:${msg.email}?subject=Re: ${msg.subject}`} className="admin-action-btn reply" title="Reply via Email"><FiMail /></a>
+                  <button className="admin-action-btn delete" title="Delete" onClick={() => handleDelete(msg.id)}><FiTrash2 /></button>
+                </div>
+              </div>
+
+              <div className="admin-msg-card__subject">{msg.subject}</div>
+              <div className="admin-msg-card__body">{msg.message}</div>
+
+              <div className="admin-msg-card__footer">
+                <span className="admin-msg-card__time">🕐 {formatDate(msg.createdAt)}</span>
+                <a
+                  href={`mailto:${msg.email}?subject=Re: ${msg.subject}`}
+                  style={{ fontSize: 12, color: '#6366f1', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 5, textDecoration: 'none' }}
+                >
+                  <FiMail size={12} /> Reply by Email
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
