@@ -2,13 +2,14 @@ import { useState } from 'react';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { useNavigate, Outlet, Link, useLocation } from 'react-router-dom';
-import { FiHome, FiBriefcase, FiAward, FiBook, FiCode, FiLogOut, FiMenu, FiX } from 'react-icons/fi';
+import { FiHome, FiBriefcase, FiAward, FiBook, FiCode, FiLogOut, FiMenu, FiX, FiInbox } from 'react-icons/fi';
 
 const NAV_ITEMS = [
   { name: 'Projects', path: '/admin/projects', icon: FiCode },
   { name: 'Experience', path: '/admin/experience', icon: FiBriefcase },
   { name: 'Education', path: '/admin/education', icon: FiBook },
   { name: 'Skills', path: '/admin/skills', icon: FiAward },
+  { name: 'Messages', path: '/admin/messages', icon: FiInbox },
 ];
 
 export default function Dashboard() {

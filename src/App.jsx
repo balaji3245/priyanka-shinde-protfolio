@@ -9,6 +9,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import ExperienceAdmin from './pages/admin/ExperienceAdmin';
 import EducationAdmin from './pages/admin/EducationAdmin';
 import SkillsAdmin from './pages/admin/SkillsAdmin';
+import MessagesAdmin from './pages/admin/MessagesAdmin';
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
             <Route path="experience" element={<ExperienceAdmin />} />
             <Route path="education" element={<EducationAdmin />} />
             <Route path="skills" element={<SkillsAdmin />} />
+            <Route path="messages" element={<MessagesAdmin />} />
           </Route>
         </Routes>
       </Router>

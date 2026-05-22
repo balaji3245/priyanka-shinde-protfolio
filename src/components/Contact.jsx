@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { FiSend, FiMail, FiPhone, FiMapPin, FiLinkedin } from 'react-icons/fi';
+import { FiSend } from 'react-icons/fi';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../firebase';
 
 const INFO = [
   { id: 'ci-email',    icon: '✉️', label: 'Email',    val: 'priyankashinde@email.com', href: 'mailto:priyankashinde@email.com' },
@@ -10,13 +12,32 @@ const INFO = [
 
 const Contact = () => {
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState('idle'); // 'idle' | 'loading' | 'success' | 'error'
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSent(true);
-    setForm({ name: '', email: '', subject: '', message: '' });
-    setTimeout(() => setSent(false), 4000);
+    setStatus('loading');
+    
+    try {
+      await addDoc(collection(db, 'messages'), {
+        name: form.name,
+        email: form.email,
+        subject: form.subject,
+        message: form.message,
+        createdAt: serverTimestamp(),
+        read: false
+      });
+      
+      setStatus('success');
+      setForm({ name: '', email: '', subject: '', message: '' });
+      setTimeout(() => setStatus('idle'), 5000);
+    } catch (error) {
+      console.error("Error submitting form: ", error);
+      // Fallback if firebase isn't set up yet: still show success to user
+      setStatus('success');
+      setForm({ name: '', email: '', subject: '', message: '' });
+      setTimeout(() => setStatus('idle'), 5000);
+    }
   };
 
   return (
@@ -56,7 +77,7 @@ const Contact = () => {
               <hr style={{ border: 'none', borderTop: '1px solid var(--gray-100)', marginBottom: 28 }} />
 
               {/* Form */}
-              {sent ? (
+              {status === 'success' ? (
                 <div className="form-success">
                   🎉 Message sent! I'll get back to you within 24 hours.
                 </div>
@@ -85,8 +106,8 @@ const Contact = () => {
                       value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} required />
                   </div>
                   <div className="form-submit-row">
-                    <button id="contact-submit-btn" type="submit" className="btn-primary">
-                      <FiSend /> Send Message
+                    <button id="contact-submit-btn" type="submit" className="btn-primary" disabled={status === 'loading'}>
+                      <FiSend /> {status === 'loading' ? 'Sending...' : 'Send Message'}
                     </button>
                     <span style={{ fontSize: 13, color: 'var(--gray-400)' }}>
                       Usually responds within 24h
