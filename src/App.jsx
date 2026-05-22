@@ -6,6 +6,10 @@ import Dashboard from './pages/admin/Dashboard';
 import ProjectsAdmin from './pages/admin/ProjectsAdmin';
 import ProtectedRoute from './components/ProtectedRoute';
 
+import ExperienceAdmin from './pages/admin/ExperienceAdmin';
+import EducationAdmin from './pages/admin/EducationAdmin';
+import SkillsAdmin from './pages/admin/SkillsAdmin';
+
 function App() {
   return (
     <AuthProvider>
@@ -29,9 +33,9 @@ function App() {
             {/* The index route for /admin will default to Projects for now */}
             <Route index element={<ProjectsAdmin />} />
             <Route path="projects" element={<ProjectsAdmin />} />
-            <Route path="experience" element={<div className="p-4">Experience Admin (Coming Soon)</div>} />
-            <Route path="education" element={<div className="p-4">Education Admin (Coming Soon)</div>} />
-            <Route path="skills" element={<div className="p-4">Skills Admin (Coming Soon)</div>} />
+            <Route path="experience" element={<ExperienceAdmin />} />
+            <Route path="education" element={<EducationAdmin />} />
+            <Route path="skills" element={<SkillsAdmin />} />
           </Route>
         </Routes>
       </Router>
