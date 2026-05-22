@@ -5,7 +5,7 @@ const About = () => (
         <div className="about-layout">
           {/* Text */}
           <div data-anim>
-            <span className="section-tag">👋 About Me</span>
+            <span className="section-tag">About</span>
             <h2 className="section-title">Passionate engineer &amp; dedicated educator</h2>
             <p className="section-desc">
               Building software by day, shaping engineers by calling.
@@ -59,26 +59,28 @@ const About = () => (
                 ))}
               </div>
 
-              <div className="about-card__location">
-                📍 Latur, Maharashtra, India
+              <div className="about-card__location" style={{ display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'center' }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                Latur, Maharashtra, India
               </div>
 
               {/* Status badge */}
               <div style={{
                 marginTop: 16,
-                padding: '10px 16px',
-                background: 'rgba(74,222,128,0.08)',
-                border: '1px solid rgba(74,222,128,0.2)',
-                borderRadius: 10,
-                fontSize: 13,
-                color: '#16a34a',
+                padding: '8px 12px',
+                background: 'var(--gray-50)',
+                border: '1px solid var(--gray-200)',
+                borderRadius: 8,
+                fontSize: 12,
+                color: 'var(--gray-700)',
                 fontWeight: 600,
                 display: 'flex',
                 alignItems: 'center',
-                gap: 8,
+                justifyContent: 'center',
+                gap: 6,
               }}>
-                <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#22c55e', display: 'inline-block', animation: 'blink 2s infinite' }} />
-                Open to Work — Available Immediately
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#10b981', display: 'inline-block' }} />
+                Open to Opportunities
               </div>
             </div>
           </div>

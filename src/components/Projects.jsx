@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { FiGithub, FiExternalLink } from 'react-icons/fi';
+import { FiGithub, FiExternalLink, FiCode, FiFolder } from 'react-icons/fi';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
 
@@ -7,8 +7,8 @@ import { db } from '../firebase';
 const FALLBACK_FEATURED = [
   {
     id: 'proj-1',
-    emoji: '☁️',
-    bg: 'linear-gradient(135deg, #dbeafe 0%, #ede9fe 100%)',
+    emoji: '',
+    bg: 'var(--gray-100)',
     title: 'Cloud Based Attendance Tracking',
     desc: 'A full-stack attendance management system for educational institutions. Features real-time marking, exportable reports, and an admin dashboard built on Java EE with MySQL backend.',
     stack: ['Java', 'J2EE', 'MySQL', 'HTML', 'CSS', 'JavaScript'],
@@ -21,7 +21,7 @@ const FALLBACK_FEATURED = [
 const FALLBACK_OTHER = [
   {
     id: 'proj-4',
-    icon: '📊',
+    icon: '',
     title: 'Sorting Algorithm Visualizer',
     desc: 'Interactive web app demonstrating Bubble, Merge, Quick & Heap sort with adjustable speed.',
     stack: ['HTML', 'CSS', 'JavaScript'],
@@ -30,7 +30,7 @@ const FALLBACK_OTHER = [
 ];
 
 const CodeSnippet = ({ bg }) => (
-  <div style={{ position: 'absolute', inset: 0, padding: 20, fontFamily: 'monospace', fontSize: 11, lineHeight: 1.7, color: 'rgba(79,70,229,0.2)', overflow: 'hidden', userSelect: 'none', whiteSpace: 'pre' }}>
+  <div style={{ position: 'absolute', inset: 0, padding: 20, fontFamily: 'monospace', fontSize: 11, lineHeight: 1.7, color: 'var(--gray-400)', overflow: 'hidden', userSelect: 'none', whiteSpace: 'pre' }}>
     {`const solution = (arr) => {\n  return arr.sort((a,b) => a-b)\n           .filter(n => n > 0)\n           .reduce((sum, n) => sum + n, 0);\n};\n\nclass DataProcessor {\n  predict(input) {\n    return this.model.run(input);\n  }\n}\n\nawait fetch('/api/data')\n  .then(r => r.json())\n  .then(processBatch);`}
   </div>
 );
@@ -74,7 +74,7 @@ const Projects = () => {
       <div className="section-wrap section-wrap--gray">
         <div className="container">
           <div data-anim>
-            <span className="section-tag">🚀 Projects</span>
+            <span className="section-tag">Projects</span>
             <h2 className="section-title">Things I've built</h2>
             <p className="section-desc">A selection of projects spanning web apps, ML models, and system tools.</p>
           </div>
@@ -88,9 +88,9 @@ const Projects = () => {
                 {featuredProjects.map((proj, index) => (
                   <article key={proj.id} id={proj.id} className="proj-card proj-card--featured">
                     {/* Preview */}
-                    <div className="proj-card__preview" style={{ background: proj.bg || 'linear-gradient(135deg, #dbeafe 0%, #ede9fe 100%)' }}>
+                    <div className="proj-card__preview" style={{ background: proj.bg || 'var(--gray-100)' }}>
                       <CodeSnippet bg={proj.bg} />
-                      <span className="proj-card__preview-emoji">{proj.emoji || '🚀'}</span>
+                      <span className="proj-card__preview-emoji" style={{ color: 'var(--gray-400)' }}><FiCode size={40} /></span>
                     </div>
 
                     {/* Body */}
@@ -127,7 +127,7 @@ const Projects = () => {
                   <div className="projects-grid">
                     {otherProjects.map(proj => (
                       <article key={proj.id} id={proj.id} className="proj-mini">
-                        <span className="proj-mini__icon">{proj.emoji || '📁'}</span>
+                        <span className="proj-mini__icon" style={{ color: 'var(--gray-500)' }}><FiFolder /></span>
                         <h4 className="proj-mini__title">{proj.title}</h4>
                         <p className="proj-mini__desc">{proj.desc}</p>
                         <div className="proj-mini__stack">

@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { TypeAnimation } from 'react-type-animation';
 import { FiArrowRight, FiDownload, FiGithub, FiLinkedin, FiMail } from 'react-icons/fi';
 
 const Hero = () => {
@@ -40,21 +39,9 @@ const Hero = () => {
             Software Engineer &amp; Educator
           </h2>
 
-          {/* Typing */}
+          {/* Subheading */}
           <div className="hero__type-line" data-hero>
-            <span className="hero__type-label">Skilled in</span>
-            <TypeAnimation
-              sequence={[
-                'Java Development', 2000,
-                'Python & ML', 2000,
-                'Web Technologies', 2000,
-                'Problem Solving', 2000,
-              ]}
-              wrapper="span"
-              speed={55}
-              repeat={Infinity}
-              style={{ color: 'var(--indigo-600)', fontWeight: 600 }}
-            />
+            <span style={{ color: 'var(--gray-900)', fontWeight: 600 }}>Specializing in</span> Java, Python, and modern web architectures.
           </div>
 
           {/* Description */}
@@ -150,12 +137,11 @@ const Hero = () => {
               className="hero__photo"
             />
           </div>
-          {/* Floating badge */}
+          {/* Clean status badge */}
           <div className="hero__photo-badge">
-            <span style={{ fontSize: 18 }}>👩‍💻</span>
+            <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#10b981' }}></span>
             <div>
-              <div style={{ fontSize: 12, fontWeight: 700, color: '#111827' }}>Available Now</div>
-              <div style={{ fontSize: 11, color: '#6b7280' }}>Open to Work</div>
+              <div style={{ fontSize: 12, fontWeight: 600, color: '#18181b' }}>Available Now</div>
             </div>
           </div>
         </div>

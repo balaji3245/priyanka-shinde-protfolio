@@ -3,12 +3,12 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
 
 const FALLBACK_SKILLS = [
-  { id: 'sk-1', icon: '☕', title: 'Programming Languages', skills: ['Java', 'Python', 'JavaScript', 'C / C++', 'SQL'], order: 0 },
-  { id: 'sk-2', icon: '🌐', title: 'Web & Backend',         skills: ['HTML5', 'CSS3', 'J2EE / Servlets', 'JSP', 'JDBC', 'REST APIs'], order: 1 },
-  { id: 'sk-3', icon: '🗄️', title: 'Databases',              skills: ['MySQL', 'Database Design', 'SQL Queries', 'Normalization'], order: 2 },
-  { id: 'sk-4', icon: '🤖', title: 'AI / Machine Learning',  skills: ['scikit-learn', 'NumPy', 'Pandas', 'NLP Basics', 'Data Preprocessing'], order: 3 },
-  { id: 'sk-5', icon: '🧩', title: 'CS Concepts',            skills: ['OOP', 'Java Collections', 'Data Structures', 'Algorithms', 'Design Patterns'], order: 4 },
-  { id: 'sk-6', icon: '🛠️', title: 'Tools & Workflow',       skills: ['Git & GitHub', 'VS Code', 'Eclipse IDE', 'IntelliJ IDEA', 'Jupyter Notebook'], order: 5 },
+  { id: 'sk-1', icon: '', title: 'Programming Languages', skills: ['Java', 'Python', 'JavaScript', 'C / C++', 'SQL'], order: 0 },
+  { id: 'sk-2', icon: '', title: 'Web & Backend',         skills: ['HTML5', 'CSS3', 'J2EE / Servlets', 'JSP', 'JDBC', 'REST APIs'], order: 1 },
+  { id: 'sk-3', icon: '', title: 'Databases',              skills: ['MySQL', 'Database Design', 'SQL Queries', 'Normalization'], order: 2 },
+  { id: 'sk-4', icon: '', title: 'AI / Machine Learning',  skills: ['scikit-learn', 'NumPy', 'Pandas', 'NLP Basics', 'Data Preprocessing'], order: 3 },
+  { id: 'sk-5', icon: '', title: 'CS Concepts',            skills: ['OOP', 'Java Collections', 'Data Structures', 'Algorithms', 'Design Patterns'], order: 4 },
+  { id: 'sk-6', icon: '', title: 'Tools & Workflow',       skills: ['Git & GitHub', 'VS Code', 'Eclipse IDE', 'IntelliJ IDEA', 'Jupyter Notebook'], order: 5 },
 ];
 
 const Skills = () => {
@@ -45,7 +45,7 @@ const Skills = () => {
       <div className="section-wrap">
         <div className="container">
           <div data-anim>
-            <span className="section-tag">⚡ Skills</span>
+            <span className="section-tag">Skills</span>
             <h2 className="section-title">Technologies I work with</h2>
             <p className="section-desc">A versatile stack spanning programming, web, databases, and AI/ML.</p>
           </div>
@@ -57,7 +57,13 @@ const Skills = () => {
               {skills.map(cat => (
                 <div key={cat.id} className="skill-cat-card">
                   <div className="skill-cat-header">
-                    <div className="skill-cat-icon">{cat.icon || '☕'}</div>
+                    {cat.icon ? (
+                      <div className="skill-cat-icon">{cat.icon}</div>
+                    ) : (
+                      <div className="skill-cat-icon" style={{ background: 'var(--gray-100)', color: 'var(--gray-500)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                      </div>
+                    )}
                     <div className="skill-cat-title">{cat.title}</div>
                   </div>
                   <div className="skill-tags">

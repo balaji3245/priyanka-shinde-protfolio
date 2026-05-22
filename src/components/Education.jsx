@@ -5,7 +5,7 @@ import { db } from '../firebase';
 const FALLBACK_EDU = [
   {
     id: 'edu-1',
-    icon: '🎓',
+    icon: '',
     score: 'CGPA 7.75',
     degree: 'B.Tech in Computer Engineering',
     school: 'DBATU Lonere',
@@ -14,7 +14,7 @@ const FALLBACK_EDU = [
   },
   {
     id: 'edu-2',
-    icon: '📜',
+    icon: '',
     score: '82.23%',
     degree: 'Diploma in Computer Engineering',
     school: 'Polytechnic Institute, Maharashtra',
@@ -23,7 +23,7 @@ const FALLBACK_EDU = [
   },
   {
     id: 'edu-3',
-    icon: '🏫',
+    icon: '',
     score: '85.80%',
     degree: 'Secondary School Certificate (SSC)',
     school: 'Maharashtra State Board',
@@ -66,7 +66,7 @@ const Education = () => {
       <div className="section-wrap section-wrap--gray">
         <div className="container">
           <div data-anim>
-            <span className="section-tag">🎓 Education</span>
+            <span className="section-tag">Education</span>
             <h2 className="section-title">Academic background</h2>
             <p className="section-desc">Strong academic foundation from Maharashtra's leading institutions.</p>
           </div>
@@ -77,7 +77,13 @@ const Education = () => {
             <div className="edu-cards" data-anim>
               {education.map(e => (
                 <div key={e.id} className="edu-card">
-                  <div className="edu-card__icon">{e.icon || '🎓'}</div>
+                  {e.icon ? (
+                    <div className="edu-card__icon">{e.icon}</div>
+                  ) : (
+                    <div className="edu-card__icon" style={{ background: 'var(--gray-100)', color: 'var(--gray-500)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+                    </div>
+                  )}
                   <div className="edu-card__score">{e.score}</div>
                   <div className="edu-card__degree">{e.degree}</div>
                   <div className="edu-card__school">{e.school}</div>
