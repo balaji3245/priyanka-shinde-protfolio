@@ -1,108 +1,142 @@
 import { useEffect, useRef } from 'react';
 import { TypeAnimation } from 'react-type-animation';
-import { FiArrowRight, FiDownload } from 'react-icons/fi';
+import { FiArrowRight, FiDownload, FiGithub, FiLinkedin, FiMail } from 'react-icons/fi';
 
-/**
- * Hero — typography-first, no gimmicks.
- * Large name, clear tagline, brief description, two CTAs.
- */
 const Hero = () => {
-  const heroRef = useRef(null);
+  const ref = useRef(null);
 
-  // Simple staggered fade-in on mount
   useEffect(() => {
-    const children = heroRef.current?.querySelectorAll('[data-hero]');
-    children?.forEach((el, i) => {
+    const els = ref.current?.querySelectorAll('[data-hero]');
+    els?.forEach((el, i) => {
       el.style.opacity = '0';
-      el.style.transform = 'translateY(20px)';
+      el.style.transform = 'translateY(18px)';
       setTimeout(() => {
-        el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        el.style.transition = 'opacity 0.55s ease, transform 0.55s ease';
         el.style.opacity = '1';
         el.style.transform = 'translateY(0)';
-      }, 200 + i * 120);
+      }, 100 + i * 100);
     });
   }, []);
 
   return (
-    <section id="home" className="hero" ref={heroRef}>
-      {/* Greeting */}
-      <p className="hero__greeting" data-hero>
-        Hi, my name is
-      </p>
+    <section id="home">
+      <div ref={ref} className="hero">
 
-      {/* Name */}
-      <h1 className="hero__name" data-hero>
-        Priyanka Shinde.
-      </h1>
+        {/* Eyebrow badge */}
+        <div className="hero__eyebrow" data-hero>
+          <span className="hero__eyebrow-dot" />
+          Open to Software Engineering Roles
+        </div>
 
-      {/* Tagline */}
-      <h2 className="hero__tagline" data-hero>
-        I build software &amp;&nbsp;teach&nbsp;tech.
-      </h2>
+        {/* Name */}
+        <h1 className="hero__name" data-hero>
+          Priyanka<br />Nandkumar Shinde
+        </h1>
 
-      {/* Description */}
-      <p className="hero__desc" data-hero>
-        I'm a Computer Engineering graduate and Assistant Professor at{' '}
-        <a href="https://www.svm.edu.in" target="_blank" rel="noopener noreferrer">
-          SVM, Latur
-        </a>
-        , passionate about software development, AI/ML, and building solutions
-        that solve real-world problems. Currently looking for a{' '}
-        <a
-          href="#contact"
-          onClick={(e) => { e.preventDefault(); document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' }); }}
-        >
-          software engineering role
-        </a>.
-      </p>
+        {/* Role with gradient */}
+        <h2 className="hero__role" data-hero>
+          Software Engineer &amp; Educator
+        </h2>
 
-      {/* Typing accent */}
-      <p
-        data-hero
-        style={{
-          fontFamily: 'var(--font-mono)',
-          fontSize: '14px',
-          color: 'var(--slate)',
-          marginBottom: '40px',
-          minHeight: '22px',
-        }}
-      >
-        <span style={{ color: 'var(--green)', marginRight: '8px' }}>→</span>
-        <TypeAnimation
-          sequence={[
-            'Java · Python · JavaScript',
-            2000,
-            'HTML · CSS · J2EE',
-            2000,
-            'Machine Learning · AI',
-            2000,
-            'Problem Solver · Teacher',
-            2000,
-          ]}
-          wrapper="span"
-          speed={55}
-          repeat={Infinity}
-        />
-      </p>
+        {/* Typing */}
+        <div className="hero__type-line" data-hero>
+          <span className="hero__type-label">Skilled in</span>
+          <TypeAnimation
+            sequence={[
+              'Java Development', 2000,
+              'Python & ML', 2000,
+              'Web Technologies', 2000,
+              'Problem Solving', 2000,
+            ]}
+            wrapper="span"
+            speed={55}
+            repeat={Infinity}
+            style={{ color: 'var(--indigo-600)', fontWeight: 600 }}
+          />
+        </div>
 
-      {/* CTAs */}
-      <div className="hero__cta" data-hero>
-        <a
-          id="hero-contact-btn"
-          href="#contact"
-          className="btn btn--primary"
-          onClick={(e) => { e.preventDefault(); document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' }); }}
-        >
-          Get in touch <FiArrowRight />
-        </a>
-        <a
-          id="hero-resume-btn"
-          href="/resume.pdf"
-          className="btn btn--ghost"
-          download
-        >
-          <FiDownload /> Download resume
-        </a>
+        {/* Description */}
+        <p className="hero__desc" data-hero>
+          Computer Engineering graduate with <strong>2+ years of teaching experience</strong> as
+          an Assistant Professor. Passionate about building scalable software, exploring AI/ML,
+          and creating technology that makes a real difference.
+        </p>
+
+        {/* CTAs */}
+        <div className="hero__actions" data-hero>
+          <a
+            id="hero-contact-btn"
+            href="#contact"
+            className="btn-primary"
+            onClick={e => { e.preventDefault(); document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' }); }}
+          >
+            Get In Touch <FiArrowRight />
+          </a>
+          <a
+            id="hero-resume-btn"
+            href="/resume.pdf"
+            className="btn-secondary"
+            download
+          >
+            <FiDownload /> Download Resume
+          </a>
+        </div>
+
+        {/* Social row */}
+        <div data-hero style={{ display: 'flex', gap: 12, marginBottom: 40 }}>
+          {[
+            { icon: <FiGithub />, href: 'https://github.com/', label: 'GitHub', id: 'hero-github' },
+            { icon: <FiLinkedin />, href: 'https://linkedin.com/in/priyanka-shinde', label: 'LinkedIn', id: 'hero-linkedin' },
+            { icon: <FiMail />, href: 'mailto:priyankashinde@email.com', label: 'Email', id: 'hero-email' },
+          ].map(s => (
+            <a
+              key={s.id}
+              id={s.id}
+              href={s.href}
+              target={s.href.startsWith('http') ? '_blank' : undefined}
+              rel="noopener noreferrer"
+              aria-label={s.label}
+              style={{
+                width: 40, height: 40,
+                border: '1px solid var(--gray-200)',
+                borderRadius: 10,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: 'var(--gray-600)',
+                fontSize: 18,
+                background: 'white',
+                boxShadow: 'var(--shadow-sm)',
+                transition: 'all 0.22s ease',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.borderColor = 'var(--indigo-500)';
+                e.currentTarget.style.color = 'var(--indigo-600)';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.borderColor = 'var(--gray-200)';
+                e.currentTarget.style.color = 'var(--gray-600)';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
+              {s.icon}
+            </a>
+          ))}
+        </div>
+
+        {/* Stats */}
+        <div className="hero__stats" data-hero>
+          {[
+            { num: '2+',    label: 'Years Teaching' },
+            { num: 'CGPA 7.75', label: 'Academic Score' },
+            { num: '3+',    label: 'Major Projects' },
+            { num: '100+',  label: 'Students Mentored' },
+          ].map(stat => (
+            <div key={stat.label}>
+              <div className="hero__stat-num">{stat.num}</div>
+              <div className="hero__stat-label">{stat.label}</div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

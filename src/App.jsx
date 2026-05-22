@@ -2,31 +2,28 @@ import { useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
-import Education from './components/Education';
 import Experience from './components/Experience';
+import Education from './components/Education';
 import Skills from './components/Skills';
 import Projects from './components/Projects';
 import Certifications from './components/Certifications';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
-import SideElements from './components/SideElements';
 import BackToTop from './components/BackToTop';
 import ScrollProgress from './components/ScrollProgress';
 
 function App() {
-  // Intersection Observer for scroll animations
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add('anim-up');
+            entry.target.classList.add('visible');
           }
         });
       },
-      { threshold: 0.1, rootMargin: '0px 0px -60px 0px' }
+      { threshold: 0.08, rootMargin: '0px 0px -40px 0px' }
     );
-
     document.querySelectorAll('[data-anim]').forEach((el) => observer.observe(el));
     return () => observer.disconnect();
   }, []);
@@ -35,7 +32,6 @@ function App() {
     <>
       <ScrollProgress />
       <Navbar />
-      <SideElements />
       <main>
         <Hero />
         <About />

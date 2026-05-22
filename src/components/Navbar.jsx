@@ -1,33 +1,39 @@
-import { useEffect, useState } from 'react';
-import { FiGithub, FiLinkedin, FiMail } from 'react-icons/fi';
+import { useState, useEffect } from 'react';
+import { FiMenu, FiX } from 'react-icons/fi';
 
-const NAV_ITEMS = [
-  { num: '01.', label: 'About',        href: '#about' },
-  { num: '02.', label: 'Experience',   href: '#experience' },
-  { num: '03.', label: 'Education',    href: '#education' },
-  { num: '04.', label: 'Skills',       href: '#skills' },
-  { num: '05.', label: 'Projects',     href: '#projects' },
-  { num: '06.', label: 'Contact',      href: '#contact' },
+const NAV_LINKS = [
+  { label: 'About',          href: '#about' },
+  { label: 'Experience',     href: '#experience' },
+  { label: 'Education',      href: '#education' },
+  { label: 'Skills',         href: '#skills' },
+  { label: 'Projects',       href: '#projects' },
+  { label: 'Certifications', href: '#certifications' },
 ];
 
 const Navbar = () => {
-  const [scrolled, setScrolled]   = useState(false);
-  const [menuOpen, setMenuOpen]   = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [active, setActive]     = useState('');
+  const [open, setOpen]         = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 50);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 20);
+      const sections = document.querySelectorAll('section[id]');
+      let cur = '';
+      sections.forEach(s => { if (window.scrollY >= s.offsetTop - 90) cur = s.id; });
+      setActive(cur);
+    };
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // lock body scroll when mobile menu open
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    document.body.style.overflow = open ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
-  }, [menuOpen]);
+  }, [open]);
 
-  const scrollTo = (href) => {
-    setMenuOpen(false);
+  const go = (href) => {
+    setOpen(false);
     document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
   };
 
@@ -39,67 +45,76 @@ const Navbar = () => {
           <a
             href="/"
             className="nav-logo"
-            onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+            onClick={e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
           >
-            priyanka.dev
+            <div className="nav-logo__icon">PS</div>
+            Priyanka Shinde
           </a>
 
           {/* Desktop nav */}
-          <nav aria-label="Primary navigation">
-            <ul className="nav-links">
-              {NAV_ITEMS.map((item) => (
-                <li key={item.label}>
-                  <a
-                    href={item.href}
-                    className="nav-link"
-                    onClick={(e) => { e.preventDefault(); scrollTo(item.href); }}
-                  >
-                    <span className="nav-link__num">{item.num}</span>
-                    {item.label}
-                  </a>
-                </li>
-              ))}
-              <li>
-                <a href="/resume.pdf" className="nav-resume" download>
-                  Resume
+          <ul className="nav-links">
+            {NAV_LINKS.map(link => (
+              <li key={link.label}>
+                <a
+                  href={link.href}
+                  className={`nav-link ${active === link.href.slice(1) ? 'active' : ''}`}
+                  onClick={e => { e.preventDefault(); go(link.href); }}
+                >
+                  {link.label}
                 </a>
               </li>
-            </ul>
-          </nav>
+            ))}
+          </ul>
 
-          {/* Hamburger */}
-          <button
-            className={`hamburger ${menuOpen ? 'open' : ''}`}
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Toggle navigation"
-            aria-expanded={menuOpen}
-          >
-            <span />
-            <span />
-            <span />
-          </button>
+          {/* CTA + hamburger */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <a
+              id="nav-contact-btn"
+              href="#contact"
+              className="nav-cta"
+              onClick={e => { e.preventDefault(); go('#contact'); }}
+            >
+              Hire Me
+            </a>
+            <button
+              className={`hamburger ${open ? 'open' : ''}`}
+              onClick={() => setOpen(!open)}
+              aria-label="Toggle menu"
+            >
+              <span /><span /><span />
+            </button>
+          </div>
         </div>
       </header>
 
-      {/* Mobile nav */}
-      {menuOpen && (
-        <nav className="mobile-nav" aria-label="Mobile navigation">
-          {NAV_ITEMS.map((item, i) => (
+      {/* Mobile overlay */}
+      {open && (
+        <div className="mobile-menu">
+          <button
+            onClick={() => setOpen(false)}
+            style={{ position: 'absolute', top: 20, right: 24, background: 'none', border: 'none', cursor: 'pointer', fontSize: 28, color: 'var(--gray-700)' }}
+            aria-label="Close menu"
+          >
+            <FiX />
+          </button>
+          {NAV_LINKS.map(link => (
             <a
-              key={item.label}
-              href={item.href}
-              className="mobile-nav__link"
-              onClick={(e) => { e.preventDefault(); scrollTo(item.href); }}
-              style={{ animationDelay: `${i * 60}ms` }}
+              key={link.label}
+              href={link.href}
+              className="mobile-menu__link"
+              onClick={e => { e.preventDefault(); go(link.href); }}
             >
-              <span className="mobile-nav__num">{item.num}</span>
-              {item.label}
+              {link.label}
             </a>
           ))}
-          <a href="/resume.pdf" className="mobile-nav__resume" download>
-            Resume
+          <a
+            href="#contact"
+            className="mobile-menu__cta"
+            onClick={e => { e.preventDefault(); go('#contact'); }}
+          >
+            Hire Me
           </a>
-        </nav>
+        </div>
       )}
     </>
   );

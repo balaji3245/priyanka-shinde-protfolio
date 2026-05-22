@@ -1,52 +1,48 @@
-import { FiBook, FiAward, FiStar } from 'react-icons/fi';
-
 const EDU = [
   {
-    year: '2019 – 2023',
+    icon: '🎓',
+    score: 'CGPA 7.75',
     degree: 'B.Tech in Computer Engineering',
     school: 'DBATU Lonere',
-    score: 'CGPA: 7.75 / 10',
-    icon: <FiBook />,
+    year: '2019 – 2023',
   },
   {
-    year: '2016 – 2019',
+    icon: '📜',
+    score: '82.23%',
     degree: 'Diploma in Computer Engineering',
     school: 'Polytechnic Institute, Maharashtra',
-    score: 'Score: 82.23%',
-    icon: <FiAward />,
+    year: '2016 – 2019',
   },
   {
-    year: '2015 – 2016',
+    icon: '🏫',
+    score: '85.80%',
     degree: 'Secondary School Certificate (SSC)',
     school: 'Maharashtra State Board',
-    score: 'Score: 85.80%',
-    icon: <FiStar />,
+    year: '2015 – 2016',
   },
 ];
 
-/**
- * Education — clean table-style list, no glassmorphism.
- */
 const Education = () => (
   <section id="education">
-    <div className="container">
-      <div className="section-heading" data-anim>
-        <span className="section-heading__num">03.</span>
-        <h2 className="section-heading__title">Education</h2>
-        <span className="section-heading__line" />
-      </div>
+    <div className="section-wrap section-wrap--gray">
+      <div className="container">
+        <div data-anim>
+          <span className="section-tag">🎓 Education</span>
+          <h2 className="section-title">Academic background</h2>
+          <p className="section-desc">Strong academic foundation from Maharashtra's leading institutions.</p>
+        </div>
 
-      <div className="edu-list" data-anim>
-        {EDU.map((item) => (
-          <div key={item.degree} className="edu-item">
-            <div className="edu-year">{item.year}</div>
-            <div>
-              <div className="edu-degree">{item.degree}</div>
-              <div className="edu-school">{item.school}</div>
-              <div className="edu-score">{item.score}</div>
+        <div className="edu-cards" data-anim>
+          {EDU.map(e => (
+            <div key={e.degree} className="edu-card">
+              <div className="edu-card__icon">{e.icon}</div>
+              <div className="edu-card__score">{e.score}</div>
+              <div className="edu-card__degree">{e.degree}</div>
+              <div className="edu-card__school">{e.school}</div>
+              <div className="edu-card__year">{e.year}</div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   </section>

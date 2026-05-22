@@ -1,57 +1,85 @@
-/**
- * About — two-column layout with photo placeholder and skills list.
- * Real dev portfolios keep this personal and concise.
- */
 const About = () => (
   <section id="about">
-    <div className="container">
-      {/* Section heading */}
-      <div className="section-heading" data-anim>
-        <span className="section-heading__num">01.</span>
-        <h2 className="section-heading__title">About Me</h2>
-        <span className="section-heading__line" />
-      </div>
+    <div className="section-wrap section-wrap--gray">
+      <div className="container">
+        <div className="about-layout">
+          {/* Text */}
+          <div data-anim>
+            <span className="section-tag">👋 About Me</span>
+            <h2 className="section-title">Passionate engineer &amp; dedicated educator</h2>
+            <p className="section-desc">
+              Building software by day, shaping engineers by calling.
+            </p>
 
-      <div className="about-grid" data-anim>
-        {/* Bio */}
-        <div className="about-text">
-          <p>
-            Hello! I'm Priyanka, a software engineer and educator based in Latur, Maharashtra.
-            I completed my <strong style={{ color: 'var(--slate-white)' }}>B.Tech in Computer Engineering</strong>{' '}
-            from DBATU Lonere with a CGPA of 7.75, and have been working as an{' '}
-            <strong style={{ color: 'var(--slate-white)' }}>Assistant Professor</strong> since 2023.
-          </p>
-          <p>
-            My journey into tech started with a love for problem-solving. Over the years, I've
-            worked on projects spanning cloud systems, machine learning, and web development.
-            I enjoy bridging the gap between theory and real-world implementation — whether that's
-            teaching it to students or building it myself.
-          </p>
-          <p>
-            I'm currently looking to transition fully into a{' '}
-            <strong style={{ color: 'var(--slate-white)' }}>software engineering role</strong>{' '}
-            where I can contribute meaningfully to product development. I'm particularly interested in
-            backend systems, AI/ML applications, and full-stack web development.
-          </p>
-          <p>Here are a few technologies I've been working with recently:</p>
+            <div className="about-body">
+              <p>
+                I'm <strong>Priyanka Nandkumar Shinde</strong>, a Computer Engineering graduate from
+                DBATU Lonere and a full-time Assistant Professor at SVM Polytechnic College, Latur.
+                With a CGPA of 7.75 and hands-on project experience, I bring both academic depth
+                and practical skills to everything I build.
+              </p>
+              <p>
+                Over the past 2+ years of teaching, I've mastered the art of <strong>breaking down
+                complex concepts</strong> — a skill that makes me a stronger developer and collaborator.
+                I've guided 100+ students through programming, DBMS, and final-year projects.
+              </p>
+              <p>
+                I'm actively seeking a <strong>software engineering role</strong> where I can apply my
+                skills in Java, Python, web technologies, and AI/ML to build products that matter.
+              </p>
+            </div>
 
-          <ul className="skills-list">
-            {[
-              'Java', 'Python', 'JavaScript',
-              'HTML & CSS', 'MySQL', 'J2EE / Servlets',
-              'scikit-learn', 'OOP & Design Patterns',
-            ].map((skill) => (
-              <li key={skill}>{skill}</li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Photo placeholder */}
-        <div className="about-photo">
-          <div className="about-photo__img" aria-hidden="true">
-            <span className="avatar-text">PS</span>
+            <div className="about-chips">
+              {['Java', 'Python', 'JavaScript', 'MySQL', 'HTML/CSS', 'J2EE', 'Machine Learning', 'OOP', 'Data Structures', 'Git'].map(s => (
+                <span key={s} className="chip">{s}</span>
+              ))}
+            </div>
           </div>
-          <div className="about-photo__frame" aria-hidden="true" />
+
+          {/* Card */}
+          <div data-anim>
+            <div className="about-card">
+              <div className="about-card__avatar">PS</div>
+              <div className="about-card__name">Priyanka N. Shinde</div>
+              <div className="about-card__role">Software Engineer · Educator</div>
+
+              <div className="about-card__stats">
+                {[
+                  { num: '2+',   label: 'Yrs Teaching' },
+                  { num: '7.75', label: 'B.Tech CGPA' },
+                  { num: '3+',   label: 'Projects' },
+                  { num: '100+', label: 'Students' },
+                ].map(s => (
+                  <div key={s.label} className="about-stat">
+                    <div className="about-stat__num">{s.num}</div>
+                    <div className="about-stat__label">{s.label}</div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="about-card__location">
+                📍 Latur, Maharashtra, India
+              </div>
+
+              {/* Status badge */}
+              <div style={{
+                marginTop: 16,
+                padding: '10px 16px',
+                background: 'rgba(74,222,128,0.08)',
+                border: '1px solid rgba(74,222,128,0.2)',
+                borderRadius: 10,
+                fontSize: 13,
+                color: '#16a34a',
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+              }}>
+                <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#22c55e', display: 'inline-block', animation: 'blink 2s infinite' }} />
+                Open to Work — Available Immediately
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
