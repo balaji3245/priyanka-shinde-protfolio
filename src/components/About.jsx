@@ -39,7 +39,9 @@ const About = () => (
           {/* Card */}
           <div data-anim>
             <div className="about-card">
-              <div className="about-card__avatar">PS</div>
+              <div className="about-card__avatar" style={{ background: 'none', padding: 0, overflow: 'hidden' }}>
+                <img src="/avtar.png" alt="Priyanka Shinde" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+              </div>
               <div className="about-card__name">Priyanka N. Shinde</div>
               <div className="about-card__role">Software Engineer · Educator</div>
 
