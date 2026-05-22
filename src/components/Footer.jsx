@@ -43,7 +43,7 @@ const Footer = () => (
     </div>
 
     <p className="footer-copy">
-      © {new Date().getFullYear()} <span>Priyanka Nandkumar Shinde</span> · Built with <span>React</span> &amp; <span>Vite</span> · Designed with ♥
+      © {new Date().getFullYear()} <span>Priyanka Shinde</span> · Built with <span>React</span> &amp; <span>Vite</span> · Designed with ♥
     </p>
   </footer>
 );

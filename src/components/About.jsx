@@ -13,7 +13,7 @@ const About = () => (
 
             <div className="about-body">
               <p>
-                I'm <strong>Priyanka Nandkumar Shinde</strong>, a Computer Engineering graduate from
+                I'm <strong>Priyanka Shinde</strong>, a Computer Engineering graduate from
                 DBATU Lonere and a full-time Assistant Professor at SVM Polytechnic College, Latur.
                 With a CGPA of 7.75 and hands-on project experience, I bring both academic depth
                 and practical skills to everything I build.
