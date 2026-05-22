@@ -1,126 +1,106 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { FiGithub, FiLinkedin, FiMail } from 'react-icons/fi';
 
-const NAV_LINKS = [
-  { label: 'About', href: '#about' },
-  { label: 'Education', href: '#education' },
-  { label: 'Experience', href: '#experience' },
-  { label: 'Skills', href: '#skills' },
-  { label: 'Projects', href: '#projects' },
-  { label: 'Certifications', href: '#certifications' },
-  { label: 'Contact', href: '#contact', cta: true },
+const NAV_ITEMS = [
+  { num: '01.', label: 'About',        href: '#about' },
+  { num: '02.', label: 'Experience',   href: '#experience' },
+  { num: '03.', label: 'Education',    href: '#education' },
+  { num: '04.', label: 'Skills',       href: '#skills' },
+  { num: '05.', label: 'Projects',     href: '#projects' },
+  { num: '06.', label: 'Contact',      href: '#contact' },
 ];
 
-/* ===== NAVBAR ===== */
 const Navbar = () => {
-  const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('');
+  const [scrolled, setScrolled]   = useState(false);
+  const [menuOpen, setMenuOpen]   = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-
-      // Active section detection
-      const sections = document.querySelectorAll('section[id]');
-      let current = '';
-      sections.forEach(section => {
-        if (window.scrollY >= section.offsetTop - 100) {
-          current = section.id;
-        }
-      });
-      setActiveSection(current);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const handleNavClick = (href) => {
+  // lock body scroll when mobile menu open
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [menuOpen]);
+
+  const scrollTo = (href) => {
     setMenuOpen(false);
-    const target = document.querySelector(href);
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth' });
-    }
+    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
     <>
-      <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <header className={`navbar ${scrolled ? 'scrolled' : ''}`}>
+        <div className="navbar__inner">
           {/* Logo */}
-          <motion.a
-            href="#"
+          <a
+            href="/"
             className="nav-logo"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
             onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
           >
-            {'<PS />'}
-          </motion.a>
+            priyanka.dev
+          </a>
 
-          {/* Desktop links */}
-          <motion.ul
-            className="nav-links"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            {NAV_LINKS.map((link, i) => (
-              <li key={link.label}>
-                <a
-                  href={link.href}
-                  className={`nav-link ${link.cta ? 'nav-cta' : ''} ${activeSection === link.href.slice(1) ? 'active' : ''}`}
-                  onClick={(e) => { e.preventDefault(); handleNavClick(link.href); }}
-                >
-                  {link.label}
+          {/* Desktop nav */}
+          <nav aria-label="Primary navigation">
+            <ul className="nav-links">
+              {NAV_ITEMS.map((item) => (
+                <li key={item.label}>
+                  <a
+                    href={item.href}
+                    className="nav-link"
+                    onClick={(e) => { e.preventDefault(); scrollTo(item.href); }}
+                  >
+                    <span className="nav-link__num">{item.num}</span>
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+              <li>
+                <a href="/resume.pdf" className="nav-resume" download>
+                  Resume
                 </a>
               </li>
-            ))}
-          </motion.ul>
+            </ul>
+          </nav>
 
           {/* Hamburger */}
-          <div
+          <button
             className={`hamburger ${menuOpen ? 'open' : ''}`}
             onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Toggle menu"
-            role="button"
-            tabIndex={0}
+            aria-label="Toggle navigation"
+            aria-expanded={menuOpen}
           >
             <span />
             <span />
             <span />
-          </div>
+          </button>
         </div>
-      </nav>
+      </header>
 
-      {/* Mobile menu */}
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            className="mobile-menu open"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            {NAV_LINKS.map((link, i) => (
-              <motion.a
-                key={link.label}
-                href={link.href}
-                className="mobile-link"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.08 }}
-                onClick={(e) => { e.preventDefault(); handleNavClick(link.href); }}
-              >
-                {link.label}
-              </motion.a>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Mobile nav */}
+      {menuOpen && (
+        <nav className="mobile-nav" aria-label="Mobile navigation">
+          {NAV_ITEMS.map((item, i) => (
+            <a
+              key={item.label}
+              href={item.href}
+              className="mobile-nav__link"
+              onClick={(e) => { e.preventDefault(); scrollTo(item.href); }}
+              style={{ animationDelay: `${i * 60}ms` }}
+            >
+              <span className="mobile-nav__num">{item.num}</span>
+              {item.label}
+            </a>
+          ))}
+          <a href="/resume.pdf" className="mobile-nav__resume" download>
+            Resume
+          </a>
+        </nav>
+      )}
     </>
   );
 };

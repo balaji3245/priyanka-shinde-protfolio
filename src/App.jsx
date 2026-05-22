@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -10,50 +9,45 @@ import Projects from './components/Projects';
 import Certifications from './components/Certifications';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
-import FloatingSocials from './components/FloatingSocials';
+import SideElements from './components/SideElements';
 import BackToTop from './components/BackToTop';
 import ScrollProgress from './components/ScrollProgress';
-import Cursor from './components/Cursor';
-import LoadingScreen from './components/LoadingScreen';
 
 function App() {
-  const [loading, setLoading] = useState(true);
-
+  // Intersection Observer for scroll animations
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 2200);
-    return () => clearTimeout(timer);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('anim-up');
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -60px 0px' }
+    );
+
+    document.querySelectorAll('[data-anim]').forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
   }, []);
 
   return (
     <>
-      <Cursor />
       <ScrollProgress />
-      <AnimatePresence>
-        {loading && <LoadingScreen key="loading" />}
-      </AnimatePresence>
-
-      {!loading && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Navbar />
-          <main>
-            <Hero />
-            <About />
-            <Education />
-            <Experience />
-            <Skills />
-            <Projects />
-            <Certifications />
-            <Contact />
-          </main>
-          <Footer />
-          <FloatingSocials />
-          <BackToTop />
-        </motion.div>
-      )}
+      <Navbar />
+      <SideElements />
+      <main>
+        <Hero />
+        <About />
+        <Experience />
+        <Education />
+        <Skills />
+        <Projects />
+        <Certifications />
+        <Contact />
+      </main>
+      <Footer />
+      <BackToTop />
     </>
   );
 }
