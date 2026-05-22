@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
+import { FiBriefcase, FiChevronRight } from 'react-icons/fi';
 import { db } from '../firebase';
 
 const FALLBACK_EXP = [
@@ -72,7 +73,7 @@ const Experience = () => {
                         <div className="exp-card__logo">{exp.logo}</div>
                       ) : (
                         <div className="exp-card__logo" style={{ background: 'var(--gray-100)', color: 'var(--gray-500)', fontSize: 16 }}>
-                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                          <FiBriefcase size={20} />
                         </div>
                       )}
                       <div>
@@ -94,7 +95,7 @@ const Experience = () => {
                       {exp.points.map((p, idx) => (
                         <li key={idx} className="exp-point">
                           <span className="exp-point__icon" style={{ marginTop: 6 }}>
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                            <FiChevronRight size={12} />
                           </span>
                           <span>{p}</span>
                         </li>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
+import { FiCode } from 'react-icons/fi';
 import { db } from '../firebase';
 
 const FALLBACK_SKILLS = [
@@ -61,7 +62,7 @@ const Skills = () => {
                       <div className="skill-cat-icon">{cat.icon}</div>
                     ) : (
                       <div className="skill-cat-icon" style={{ background: 'var(--gray-100)', color: 'var(--gray-500)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                        <FiCode size={20} />
                       </div>
                     )}
                     <div className="skill-cat-title">{cat.title}</div>

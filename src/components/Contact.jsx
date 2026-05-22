@@ -1,13 +1,13 @@
 import { useState } from 'react';
-import { FiSend } from 'react-icons/fi';
+import { FiSend, FiMail, FiPhone, FiMapPin, FiLinkedin, FiCheckCircle } from 'react-icons/fi';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase';
 
 const INFO = [
-  { id: 'ci-email',    icon: '✉️', label: 'Email',    val: 'priyankashinde@email.com', href: 'mailto:priyankashinde@email.com' },
-  { id: 'ci-phone',    icon: '📱', label: 'Phone',    val: '+91 XXXXX XXXXX',          href: 'tel:+91XXXXXXXXXX' },
-  { id: 'ci-location', icon: '📍', label: 'Location', val: 'Latur, Maharashtra',       href: 'https://maps.google.com/?q=Latur,Maharashtra' },
-  { id: 'ci-linkedin', icon: '💼', label: 'LinkedIn', val: 'linkedin.com/in/priyanka-shinde', href: 'https://linkedin.com/in/' },
+  { id: 'ci-email',    icon: <FiMail />, label: 'Email',    val: 'priyankashinde@email.com', href: 'mailto:priyankashinde@email.com' },
+  { id: 'ci-phone',    icon: <FiPhone />, label: 'Phone',    val: '+91 XXXXX XXXXX',          href: 'tel:+91XXXXXXXXXX' },
+  { id: 'ci-location', icon: <FiMapPin />, label: 'Location', val: 'Latur, Maharashtra',       href: 'https://maps.google.com/?q=Latur,Maharashtra' },
+  { id: 'ci-linkedin', icon: <FiLinkedin />, label: 'LinkedIn', val: 'linkedin.com/in/priyanka-shinde', href: 'https://linkedin.com/in/' },
 ];
 
 const Contact = () => {
@@ -45,7 +45,7 @@ const Contact = () => {
       <div className="section-wrap section-wrap--gray">
         <div className="container">
           <div data-anim style={{ textAlign: 'center', marginBottom: 48 }}>
-            <span className="section-tag" style={{ margin: '0 auto 16px' }}>📬 Contact</span>
+            <span className="section-tag" style={{ margin: '0 auto 16px' }}>Contact</span>
             <h2 className="section-title">Let's work together</h2>
             <p className="section-desc" style={{ margin: '0 auto' }}>
               I'm actively looking for software engineering roles. Got an opportunity or just want to chat? My inbox is open!
@@ -78,8 +78,8 @@ const Contact = () => {
 
               {/* Form */}
               {status === 'success' ? (
-                <div className="form-success">
-                  🎉 Message sent! I'll get back to you within 24 hours.
+                <div className="form-success" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                  <FiCheckCircle size={20} color="#10b981" /> Message sent! I'll get back to you within 24 hours.
                 </div>
               ) : (
                 <form id="contact-form" className="contact-form" onSubmit={handleSubmit}>

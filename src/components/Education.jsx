@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
+import { FiAward } from 'react-icons/fi';
 import { db } from '../firebase';
 
 const FALLBACK_EDU = [
@@ -81,7 +82,7 @@ const Education = () => {
                     <div className="edu-card__icon">{e.icon}</div>
                   ) : (
                     <div className="edu-card__icon" style={{ background: 'var(--gray-100)', color: 'var(--gray-500)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+                      <FiAward size={24} />
                     </div>
                   )}
                   <div className="edu-card__score">{e.score}</div>
