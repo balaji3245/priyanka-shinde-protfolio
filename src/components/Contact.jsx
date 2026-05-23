@@ -4,10 +4,10 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase';
 
 const INFO = [
-  { id: 'ci-email',    icon: <FiMail />, label: 'Email',    val: 'priyankashinde@email.com', href: 'mailto:priyankashinde@email.com' },
-  { id: 'ci-phone',    icon: <FiPhone />, label: 'Phone',    val: '+91 XXXXX XXXXX',          href: 'tel:+91XXXXXXXXXX' },
+  { id: 'ci-email',    icon: <FiMail />, label: 'Email',    val: 'priyankanshinde2019@gmail.com', href: 'mailto:priyankanshinde2019@gmail.com' },
+  { id: 'ci-phone',    icon: <FiPhone />, label: 'Phone',    val: '+91 8788258726',          href: 'tel:+918788258726' },
   { id: 'ci-location', icon: <FiMapPin />, label: 'Location', val: 'Latur, Maharashtra',       href: 'https://maps.google.com/?q=Latur,Maharashtra' },
-  { id: 'ci-linkedin', icon: <FiLinkedin />, label: 'LinkedIn', val: 'linkedin.com/in/priyanka-shinde', href: 'https://linkedin.com/in/' },
+  { id: 'ci-linkedin', icon: <FiLinkedin />, label: 'LinkedIn', val: 'linkedin.com/in/priyankanandkumarshinde', href: 'https://in.linkedin.com/in/priyankanandkumarshinde' },
 ];
 
 const Contact = () => {

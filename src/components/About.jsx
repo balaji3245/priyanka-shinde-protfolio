@@ -15,7 +15,7 @@ const About = () => (
 
             <div className="about-body">
               <p>
-                I'm <strong>Priyanka Shinde</strong>, a Computer Engineering graduate from
+                I'm <strong>Priyanka Nandkumar Shinde</strong>, a Computer Engineering graduate from
                 DBATU Lonere and a full-time Assistant Professor at SVM Polytechnic College, Latur.
                 With a CGPA of 7.75 and hands-on project experience, I bring both academic depth
                 and practical skills to everything I build.
@@ -44,8 +44,8 @@ const About = () => (
               <div className="about-card__avatar" style={{ background: 'none', padding: 0, overflow: 'hidden' }}>
                 <img src="/avtar.png" alt="Priyanka Shinde" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
               </div>
-              <div className="about-card__name">Priyanka N. Shinde</div>
-              <div className="about-card__role">Software Engineer · Educator</div>
+              <div className="about-card__name">Priyanka Nandkumar Shinde</div>
+              <div className="about-card__role">ASPIRING SOFTWARE ENGINEER</div>
 
               <div className="about-card__stats">
                 {[

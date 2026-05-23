@@ -30,25 +30,24 @@ const Hero = () => {
           </div>
 
           {/* Name */}
-          <h1 className="hero__name" data-hero>
-            Priyanka<br />Shinde
+          <h1 className="hero__name" data-hero style={{ fontSize: 'clamp(40px, 6vw, 64px)' }}>
+            Priyanka<br />Nandkumar Shinde
           </h1>
 
           {/* Role with gradient */}
           <h2 className="hero__role" data-hero>
-            Software Engineer &amp; Educator
+            ASPIRING SOFTWARE ENGINEER
           </h2>
 
           {/* Subheading */}
           <div className="hero__type-line" data-hero>
-            <span style={{ color: 'var(--gray-900)', fontWeight: 600 }}>Specializing in</span> Java, Python, and modern web architectures.
+            <span style={{ color: 'var(--gray-900)', fontWeight: 600 }}>Motivated Computer Engineering graduate</span> with 2+ years of teaching experience.
           </div>
 
           {/* Description */}
           <p className="hero__desc" data-hero>
-            Computer Engineering graduate with <strong>2+ years of teaching experience</strong> as
-            an Assistant Professor. Passionate about building scalable software, exploring AI/ML,
-            and creating technology that makes a real difference.
+            Motivated Computer Engineering graduate with <strong>2+ years of teaching experience</strong>, 
+            seeking an opportunity in the IT industry to apply technical and problem-solving skills.
           </p>
 
           {/* CTAs */}
@@ -75,8 +74,8 @@ const Hero = () => {
           <div data-hero style={{ display: 'flex', gap: 12, marginBottom: 40 }}>
             {[
               { icon: <FiGithub />, href: 'https://github.com/', label: 'GitHub', id: 'hero-github' },
-              { icon: <FiLinkedin />, href: 'https://linkedin.com/in/priyanka-shinde', label: 'LinkedIn', id: 'hero-linkedin' },
-              { icon: <FiMail />, href: 'mailto:priyankashinde@email.com', label: 'Email', id: 'hero-email' },
+              { icon: <FiLinkedin />, href: 'https://in.linkedin.com/in/priyankanandkumarshinde', label: 'LinkedIn', id: 'hero-linkedin' },
+              { icon: <FiMail />, href: 'mailto:priyankanshinde2019@gmail.com', label: 'Email', id: 'hero-email' },
             ].map(s => (
               <a
                 key={s.id}
@@ -133,7 +132,7 @@ const Hero = () => {
           <div className="hero__photo-ring">
             <img
               src="/avtar.png"
-              alt="Priyanka Shinde"
+              alt="Priyanka Nandkumar Shinde"
               className="hero__photo"
             />
           </div>

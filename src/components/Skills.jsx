@@ -4,12 +4,11 @@ import { FiCode } from 'react-icons/fi';
 import { db } from '../firebase';
 
 const FALLBACK_SKILLS = [
-  { id: 'sk-1', icon: '', title: 'Programming Languages', skills: ['Java', 'Python', 'JavaScript', 'C / C++', 'SQL'], order: 0 },
-  { id: 'sk-2', icon: '', title: 'Web & Backend',         skills: ['HTML5', 'CSS3', 'J2EE / Servlets', 'JSP', 'JDBC', 'REST APIs'], order: 1 },
-  { id: 'sk-3', icon: '', title: 'Databases',              skills: ['MySQL', 'Database Design', 'SQL Queries', 'Normalization'], order: 2 },
-  { id: 'sk-4', icon: '', title: 'AI / Machine Learning',  skills: ['scikit-learn', 'NumPy', 'Pandas', 'NLP Basics', 'Data Preprocessing'], order: 3 },
-  { id: 'sk-5', icon: '', title: 'CS Concepts',            skills: ['OOP', 'Java Collections', 'Data Structures', 'Algorithms', 'Design Patterns'], order: 4 },
-  { id: 'sk-6', icon: '', title: 'Tools & Workflow',       skills: ['Git & GitHub', 'VS Code', 'Eclipse IDE', 'IntelliJ IDEA', 'Jupyter Notebook'], order: 5 },
+  { id: 'sk-1', icon: '', title: 'Programming',   skills: ['Java', 'Python', 'JavaScript'], order: 0 },
+  { id: 'sk-2', icon: '', title: 'Technologies',  skills: ['HTML', 'CSS', 'J2EE'], order: 1 },
+  { id: 'sk-3', icon: '', title: 'Database',      skills: ['MySQL'], order: 2 },
+  { id: 'sk-4', icon: '', title: 'Concepts',      skills: ['OOP', 'Java Collection Framework'], order: 3 },
+  { id: 'sk-5', icon: '', title: 'AI / ML',       skills: ['Basic Machine Learning & AI Concepts'], order: 4 },
 ];
 
 const Skills = () => {

@@ -24,8 +24,8 @@ const Footer = () => (
       <div className="footer-socials">
         {[
           { icon: <FiGithub />,   href: 'https://github.com/',             id: 'footer-github',   label: 'GitHub' },
-          { icon: <FiLinkedin />, href: 'https://linkedin.com/in/',        id: 'footer-linkedin', label: 'LinkedIn' },
-          { icon: <FiMail />,     href: 'mailto:priyankashinde@email.com', id: 'footer-email',    label: 'Email' },
+          { icon: <FiLinkedin />, href: 'https://in.linkedin.com/in/priyankanandkumarshinde',        id: 'footer-linkedin', label: 'LinkedIn' },
+          { icon: <FiMail />,     href: 'mailto:priyankanshinde2019@gmail.com', id: 'footer-email',    label: 'Email' },
         ].map(s => (
           <a
             key={s.id}

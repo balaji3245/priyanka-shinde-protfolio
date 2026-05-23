@@ -7,28 +7,28 @@ const FALLBACK_EDU = [
   {
     id: 'edu-1',
     icon: '',
-    score: 'CGPA 7.75',
-    degree: 'B.Tech in Computer Engineering',
-    school: 'DBATU Lonere',
-    year: '2019 – 2023',
+    score: 'CGPA: 7.75',
+    degree: 'Bachelor of Technology (Computer Engineering)',
+    school: 'Dr. Babasaheb Ambedkar Technological University, Lonere',
+    year: '2020 - 2023',
     order: 0
   },
   {
     id: 'edu-2',
     icon: '',
-    score: '82.23%',
+    score: 'Percentage: 82.23%',
     degree: 'Diploma in Computer Engineering',
-    school: 'Polytechnic Institute, Maharashtra',
-    year: '2016 – 2019',
+    school: 'Govt. Residential Women’s Polytechnic, Latur',
+    year: '2017 - 2020',
     order: 1
   },
   {
     id: 'edu-3',
     icon: '',
-    score: '85.80%',
-    degree: 'Secondary School Certificate (SSC)',
-    school: 'Maharashtra State Board',
-    year: '2015 – 2016',
+    score: 'Percentage: 85.80%',
+    degree: 'SSC',
+    school: 'Maharashtra Vidyalaya, Nilanga',
+    year: '2014',
     order: 2
   },
 ];

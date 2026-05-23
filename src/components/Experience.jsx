@@ -8,18 +8,14 @@ const FALLBACK_EXP = [
     id: 'exp-1',
     logo: '',
     title: 'Assistant Professor',
-    company: 'SVM Polytechnic College, Latur',
-    period: 'June 2023 – Present · Full-time',
+    company: 'SVM, Latur',
+    period: '2023 - NOW',
     isActive: true,
     points: [
-      'Deliver lectures in Java, C, DBMS, Data Structures & Web Technologies to 100+ students per semester.',
-      'Guide final-year students through complete project lifecycle — from problem definition to implementation and presentation.',
-      'Conduct technical workshops, lab sessions and coding bootcamps to improve practical programming skills.',
-      'Mentor students on career pathways in software engineering, competitive programming, and certifications.',
-      'Design course materials, assignments, and assessments aligned with university curriculum and industry needs.',
-      'Organize inter-college hackathons and technical events fostering innovation and teamwork.'
+      'Taught undergraduate students in Computer Science and Information Technology.',
+      'Guided students in projects and developed communication, presentation, and technical skills.'
     ],
-    tags: ['Java', 'C Programming', 'DBMS', 'Data Structures', 'Web Technologies', 'Project Mentorship', 'Curriculum Design', 'Leadership']
+    tags: ['Computer Science', 'Information Technology', 'Project Mentorship', 'Communication', 'Technical Skills']
   }
 ];
 

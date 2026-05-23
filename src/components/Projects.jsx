@@ -10,7 +10,7 @@ const FALLBACK_FEATURED = [
     emoji: '',
     bg: 'var(--gray-100)',
     title: 'Cloud Based Attendance Tracking',
-    desc: 'A full-stack attendance management system for educational institutions. Features real-time marking, exportable reports, and an admin dashboard built on Java EE with MySQL backend.',
+    desc: 'Developed a cloud-based attendance management system using web technologies.',
     stack: ['Java', 'J2EE', 'MySQL', 'HTML', 'CSS', 'JavaScript'],
     github: '#',
     demo: '#',
@@ -20,11 +20,19 @@ const FALLBACK_FEATURED = [
 
 const FALLBACK_OTHER = [
   {
-    id: 'proj-4',
+    id: 'proj-2',
     icon: '',
-    title: 'Sorting Algorithm Visualizer',
-    desc: 'Interactive web app demonstrating Bubble, Merge, Quick & Heap sort with adjustable speed.',
-    stack: ['HTML', 'CSS', 'JavaScript'],
+    title: 'Sentiment Analysis on Movie Reviews',
+    desc: 'Built a machine learning model for sentiment classification using Python.',
+    stack: ['Python', 'Machine Learning', 'NLP'],
+    isFeatured: false
+  },
+  {
+    id: 'proj-3',
+    icon: '',
+    title: 'Digital Image Watermarking',
+    desc: 'Implemented image security and copyright protection techniques.',
+    stack: ['Python', 'Image Processing'],
     isFeatured: false
   }
 ];
