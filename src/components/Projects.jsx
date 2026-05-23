@@ -44,15 +44,9 @@ const CodeSnippet = ({ bg }) => (
 );
 
 const Projects = () => {
-  const [featuredProjects, setFeaturedProjects] = useState([]);
-  const [otherProjects, setOtherProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setFeaturedProjects(FALLBACK_FEATURED);
-    setOtherProjects(FALLBACK_OTHER);
-    setLoading(false);
-  }, []);
+  const [featuredProjects, setFeaturedProjects] = useState(FALLBACK_FEATURED);
+  const [otherProjects, setOtherProjects] = useState(FALLBACK_OTHER);
+  const [loading, setLoading] = useState(false);
 
   return (
     <section id="projects">

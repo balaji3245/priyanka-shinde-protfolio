@@ -37,13 +37,8 @@ const FALLBACK_EDU = [
 ];
 
 const Education = () => {
-  const [education, setEducation] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setEducation(FALLBACK_EDU);
-    setLoading(false);
-  }, []);
+  const [education, setEducation] = useState(FALLBACK_EDU);
+  const [loading, setLoading] = useState(false);
 
   return (
     <section id="education">

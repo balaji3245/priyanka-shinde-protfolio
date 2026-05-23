@@ -12,13 +12,8 @@ const FALLBACK_SKILLS = [
 ];
 
 const Skills = () => {
-  const [skills, setSkills] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setSkills(FALLBACK_SKILLS);
-    setLoading(false);
-  }, []);
+  const [skills, setSkills] = useState(FALLBACK_SKILLS);
+  const [loading, setLoading] = useState(false);
 
   return (
     <section id="skills">

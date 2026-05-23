@@ -22,13 +22,8 @@ const FALLBACK_EXP = [
 ];
 
 const Experience = () => {
-  const [experiences, setExperiences] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setExperiences(FALLBACK_EXP);
-    setLoading(false);
-  }, []);
+  const [experiences, setExperiences] = useState(FALLBACK_EXP);
+  const [loading, setLoading] = useState(false);
 
   return (
     <section id="experience">
