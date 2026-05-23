@@ -30,8 +30,8 @@ const Hero = () => {
           </div>
 
           {/* Name */}
-          <h1 className="hero__name" data-hero style={{ fontSize: 'clamp(40px, 6vw, 64px)' }}>
-            Priyanka<br />Nandkumar Shinde
+          <h1 className="hero__name" data-hero style={{ wordWrap: 'break-word', hyphens: 'auto' }}>
+            Priyanka Nandkumar Shinde
           </h1>
 
           {/* Role with gradient */}
