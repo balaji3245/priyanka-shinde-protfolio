@@ -10,8 +10,8 @@ const FALLBACK_FEATURED = [
     emoji: '',
     bg: 'var(--gray-100)',
     title: 'Cloud Based Attendance Tracking',
-    desc: 'Developed a cloud-based attendance management system using web technologies.',
-    stack: ['Java', 'J2EE', 'MySQL', 'HTML', 'CSS', 'JavaScript'],
+    desc: 'Developed a comprehensive cloud-based attendance management system using modern web technologies. Designed the architecture to support real-time attendance logging, automated report generation, and an intuitive administrative dashboard to streamline institutional operations.',
+    stack: ['Java', 'J2EE', 'MySQL', 'HTML5', 'CSS3', 'JavaScript'],
     github: '#',
     demo: '#',
     isFeatured: true
@@ -23,16 +23,16 @@ const FALLBACK_OTHER = [
     id: 'proj-2',
     icon: '',
     title: 'Sentiment Analysis on Movie Reviews',
-    desc: 'Built a machine learning model for sentiment classification using Python.',
-    stack: ['Python', 'Machine Learning', 'NLP'],
+    desc: 'Built and trained a machine learning model for sentiment classification using Python. Processed natural language data to accurately classify user reviews as positive or negative, leveraging core NLP techniques and statistical modeling.',
+    stack: ['Python', 'Machine Learning', 'NLP', 'Data Processing'],
     isFeatured: false
   },
   {
     id: 'proj-3',
     icon: '',
     title: 'Digital Image Watermarking',
-    desc: 'Implemented image security and copyright protection techniques.',
-    stack: ['Python', 'Image Processing'],
+    desc: 'Implemented advanced digital image security and copyright protection techniques. Developed algorithms to embed and extract watermarks, ensuring image authenticity and preventing unauthorized duplication of digital assets.',
+    stack: ['Python', 'Image Processing', 'Security Algorithms'],
     isFeatured: false
   }
 ];

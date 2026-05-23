@@ -11,6 +11,7 @@ const FALLBACK_EDU = [
     degree: 'Bachelor of Technology (Computer Engineering)',
     school: 'Dr. Babasaheb Ambedkar Technological University, Lonere',
     year: '2020 - 2023',
+    desc: 'Core coursework included Data Structures, Algorithms, Software Engineering, Database Management Systems, and Artificial Intelligence.',
     order: 0
   },
   {
@@ -20,6 +21,7 @@ const FALLBACK_EDU = [
     degree: 'Diploma in Computer Engineering',
     school: 'Govt. Residential Women’s Polytechnic, Latur',
     year: '2017 - 2020',
+    desc: 'Focused on foundational computer science principles, practical programming in C/C++, and basic web development.',
     order: 1
   },
   {
@@ -29,6 +31,7 @@ const FALLBACK_EDU = [
     degree: 'SSC',
     school: 'Maharashtra Vidyalaya, Nilanga',
     year: '2014',
+    desc: 'Excelled in Mathematics and Science, building a strong analytical foundation for an engineering career.',
     order: 2
   },
 ];
@@ -69,6 +72,7 @@ const Education = () => {
                   <div className="edu-card__degree">{e.degree}</div>
                   <div className="edu-card__school">{e.school}</div>
                   <div className="edu-card__year">{e.year}</div>
+                  {e.desc && <div className="edu-card__desc" style={{ marginTop: '12px', fontSize: '14px', color: 'var(--gray-500)', lineHeight: '1.6' }}>{e.desc}</div>}
                 </div>
               ))}
             </div>

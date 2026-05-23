@@ -12,10 +12,12 @@ const FALLBACK_EXP = [
     period: '2023 - NOW',
     isActive: true,
     points: [
-      'Taught undergraduate students in Computer Science and Information Technology.',
-      'Guided students in projects and developed communication, presentation, and technical skills.'
+      'Delivered comprehensive lectures and practical lab sessions for undergraduate students in Computer Science and Information Technology.',
+      'Mentored students through their academic projects, providing guidance on software architecture, coding best practices, and debugging.',
+      'Organized and led technical sessions to develop students\' practical programming abilities alongside their communication and presentation skills.',
+      'Evaluated student performance through assignments and technical assessments, consistently encouraging a strong problem-solving mindset.'
     ],
-    tags: ['Computer Science', 'Information Technology', 'Project Mentorship', 'Communication', 'Technical Skills']
+    tags: ['Computer Science', 'Information Technology', 'Project Mentorship', 'Curriculum Planning', 'Technical Evaluation']
   }
 ];
 
