@@ -31,7 +31,7 @@ const Hero = () => {
 
           {/* Name */}
           <h1 className="hero__name" data-hero style={{ wordWrap: 'break-word', hyphens: 'auto' }}>
-            Priyanka Nandkumar Shinde
+            Priyanka Shinde
           </h1>
 
           {/* Role with gradient */}
@@ -132,7 +132,7 @@ const Hero = () => {
           <div className="hero__photo-ring">
             <img
               src="/avtar.png"
-              alt="Priyanka Nandkumar Shinde"
+              alt="Priyanka Shinde"
               className="hero__photo"
             />
           </div>
