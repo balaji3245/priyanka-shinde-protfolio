@@ -24,27 +24,8 @@ const Experience = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchExperiences = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, 'experience'));
-        if (querySnapshot.empty) {
-          setExperiences(FALLBACK_EXP);
-        } else {
-          const exps = [];
-          querySnapshot.forEach((doc) => {
-            exps.push({ id: doc.id, ...doc.data() });
-          });
-          setExperiences(exps);
-        }
-      } catch (err) {
-        console.error("Error fetching experiences from Firebase, using fallback", err);
-        setExperiences(FALLBACK_EXP);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchExperiences();
+    setExperiences(FALLBACK_EXP);
+    setLoading(false);
   }, []);
 
   return (

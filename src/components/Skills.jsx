@@ -16,28 +16,8 @@ const Skills = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchSkills = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, 'skills'));
-        if (querySnapshot.empty) {
-          setSkills(FALLBACK_SKILLS);
-        } else {
-          const skillsList = [];
-          querySnapshot.forEach((doc) => {
-            skillsList.push({ id: doc.id, ...doc.data() });
-          });
-          skillsList.sort((a, b) => (a.order || 0) - (b.order || 0));
-          setSkills(skillsList);
-        }
-      } catch (err) {
-        console.error("Error fetching skills from Firebase, using fallback", err);
-        setSkills(FALLBACK_SKILLS);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSkills();
+    setSkills(FALLBACK_SKILLS);
+    setLoading(false);
   }, []);
 
   return (

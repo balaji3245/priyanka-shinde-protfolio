@@ -38,28 +38,8 @@ const Education = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchEducation = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, 'education'));
-        if (querySnapshot.empty) {
-          setEducation(FALLBACK_EDU);
-        } else {
-          const eduList = [];
-          querySnapshot.forEach((doc) => {
-            eduList.push({ id: doc.id, ...doc.data() });
-          });
-          eduList.sort((a, b) => (a.order || 0) - (b.order || 0));
-          setEducation(eduList);
-        }
-      } catch (err) {
-        console.error("Error fetching education from Firebase, using fallback", err);
-        setEducation(FALLBACK_EDU);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchEducation();
+    setEducation(FALLBACK_EDU);
+    setLoading(false);
   }, []);
 
   return (

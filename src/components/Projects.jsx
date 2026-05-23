@@ -49,32 +49,9 @@ const Projects = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, 'projects'));
-        if (querySnapshot.empty) {
-          // Use fallback if DB is empty
-          setFeaturedProjects(FALLBACK_FEATURED);
-          setOtherProjects(FALLBACK_OTHER);
-        } else {
-          const projs = [];
-          querySnapshot.forEach((doc) => {
-            projs.push({ id: doc.id, ...doc.data() });
-          });
-          
-          setFeaturedProjects(projs.filter(p => p.isFeatured));
-          setOtherProjects(projs.filter(p => !p.isFeatured));
-        }
-      } catch (err) {
-        console.error("Error fetching projects from Firebase, using fallback", err);
-        setFeaturedProjects(FALLBACK_FEATURED);
-        setOtherProjects(FALLBACK_OTHER);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProjects();
+    setFeaturedProjects(FALLBACK_FEATURED);
+    setOtherProjects(FALLBACK_OTHER);
+    setLoading(false);
   }, []);
 
   return (
