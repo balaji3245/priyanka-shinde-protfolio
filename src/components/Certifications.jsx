@@ -1,6 +1,6 @@
 const CERTS = [
-  { id: 'cert-1', icon: '☁️', title: 'TechSaksham Internship on Cloud Computing', issuer: 'TechSaksham', year: '2022' },
-  { id: 'cert-2', icon: '🤖', title: 'TechSaksham Program on Artificial Intelligence', issuer: 'TechSaksham', year: '2022' },
+  { id: 'cert-1', icon: '☁️', title: 'Cloud Computing – TechSaksham by Microsoft & SAP (Edunet Foundation)', issuer: 'TechSaksham', year: '2022' },
+  { id: 'cert-2', icon: '🤖', title: 'Artificial intelligence - TechSaksham by Microsoft & SAP (Edunet Foundation)', issuer: 'TechSaksham', year: '2022' },
   { id: 'cert-3', icon: '🐍', title: 'Python Training', issuer: 'Internshala', year: '2021' },
   { id: 'cert-4', icon: '🌐', title: 'Web Development & Technologies Training', issuer: 'INGenious Technohub Pvt. Ltd.', year: '2021' },
 ];
