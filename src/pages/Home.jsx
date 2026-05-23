@@ -22,10 +22,18 @@ export default function Home() {
           }
         });
       },
-      { threshold: 0.08, rootMargin: '0px 0px -40px 0px' }
+      { threshold: 0.02, rootMargin: '0px 0px -20px 0px' }
     );
-    document.querySelectorAll('[data-anim]').forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
+    
+    // Slight delay ensures all child components are fully mounted in the DOM
+    const timer = setTimeout(() => {
+      document.querySelectorAll('[data-anim]').forEach((el) => observer.observe(el));
+    }, 150);
+    
+    return () => {
+      clearTimeout(timer);
+      observer.disconnect();
+    };
   }, []);
 
   return (
