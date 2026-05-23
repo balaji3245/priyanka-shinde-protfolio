@@ -1309,6 +1309,13 @@ body { max-width: 100vw; }
   border-radius: var(--radius);
   text-decoration: none;
   transition: all var(--duration) var(--ease);
+  min-width: 0;
+  overflow: hidden;
+}
+
+.contact-info-item > div:last-child {
+  min-width: 0;
+  flex: 1;
 }
 
 .contact-info-item:hover {
@@ -1343,6 +1350,9 @@ body { max-width: 100vw; }
   font-weight: 500;
   color: var(--gray-800);
   margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Form */
